@@ -1,0 +1,38 @@
+.upload__container {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.input__wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.input__file {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.input__file-button {
+  width: 100%;
+  margin: 15px;
+  padding: 15px;
+  width: 20rem;
+  background-color: none;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  border: 1px solid whitesmoke;
+  border-radius: 20px;
+}
+
+.input__file-button__label {
+  width: 100%;
+  cursor: pointer;
+}

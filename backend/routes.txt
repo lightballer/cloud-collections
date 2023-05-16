@@ -1,0 +1,13 @@
+/login
+
+/register
+
+/ (root page)
+
+/myfiles?page={number}&pageSize={number}
+
+/myfiles/:id
+
+/allow_access/:file_or_folder_id { body: { userId } }
+
+/create_folder { body: { folderName, files: []File } }
