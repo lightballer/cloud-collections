@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import "./MyFiles.css";
 import { getFiles } from "../http/files";
+import File from "../File";
 
 const MyFiles = () => {
   const [filesList, setFilesList] = useState([]);
@@ -13,11 +14,7 @@ const MyFiles = () => {
   return (
     <div className="files-list_container">
       {filesList.map((file) => (
-        <div className="file_container" key={file.id}>
-          <p className="file_name">{file.name}</p>
-          <p className="file_updatedAt">{file.updatedAt}</p>
-          <img alt="file" src={file.url} />
-        </div>
+        <File key={file.id} file={file} />
       ))}
     </div>
   );

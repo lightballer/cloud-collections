@@ -7,12 +7,12 @@ import Upload from "./Upload";
 
 const routes = {
   // Main: <MainPage />,
-  'My Files': <MyFiles/>,
-  "Upload": <Upload/>
+  "My Files": <MyFiles />,
+  Upload: <Upload />,
 };
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(routes["My Files"]);
 
   const onNavItemClick = useCallback((event) => {
     const pageTitle = event.target.innerText;
