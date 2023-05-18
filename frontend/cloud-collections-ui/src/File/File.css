@@ -1,0 +1,18 @@
+.smaller-card {
+    max-width: 10rem;
+}
+
+.card .card-img-top {
+    width: 10rem;
+    height: 10rem;
+    border-bottom: 1px solid gray;
+}
+
+.card .card-body {
+    padding: 5px;
+    text-align: center;
+}
+
+.card .card-body h6 {
+   margin: 0;
+}

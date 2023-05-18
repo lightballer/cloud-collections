@@ -21,29 +21,22 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <nav>
-          <ul>
-            {/*<li>
-               <button className="navButton" onClick={onNavItemClick}>
-                Main
-              </button>
-            </li> */}
-            <li>
-              <button className="navButton" onClick={onNavItemClick}>
-                My Files
-              </button>
-            </li>
-            <li>
-              <button className="navButton" onClick={onNavItemClick}>
-                Upload
-              </button>
-            </li>
-          </ul>
-        </nav>
+    <div className="container-fluid gray-bg" style={{ minHeight: "100vh" }}>
+      <header>
+        <div className="btn-center">
+          <div>
+            <button className="btn btn-dark btn-lg" onClick={onNavItemClick}>
+              My Files
+            </button>
+          </div>
+          <div>
+            <button className="btn btn-dark btn-lg" onClick={onNavItemClick}>
+              Upload
+            </button>
+          </div>
+        </div>
       </header>
-      <body>{currentPage}</body>
+      <main>{currentPage}</main>
     </div>
   );
 }

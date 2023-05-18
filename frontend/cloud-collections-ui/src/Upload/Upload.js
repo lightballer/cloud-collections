@@ -41,9 +41,9 @@ const Upload = () => {
           Select file
         </button>
       </form>
-      <ul>
+      <ul className="list-group">
         {files.map((file, i) => (
-          <li key={i}>{file?.name}</li>
+          <li className="list-group-item" key={i}>{file?.name}</li>
         ))}
       </ul>
     </div>
