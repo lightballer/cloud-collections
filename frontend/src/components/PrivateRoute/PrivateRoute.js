@@ -1,12 +1,12 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-import useAuth from "../../useAuth";
+import { useStateValue } from "../../store/reducer";
 
 const PrivateRoute = ({ redirectPath, children }) => {
-  const isAuthenticated = useAuth();
+  const { state } = useStateValue();
 
-  if (!isAuthenticated) {
+  if (!state.username) {
     return <Navigate to={redirectPath} replace />;
   }
 

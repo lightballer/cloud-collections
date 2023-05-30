@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
-import useAuth from "../../useAuth";
+import { useStateValue } from "../../store/reducer";
 
 const Header = () => {
-  const username = useAuth();
+  const { state } = useStateValue();
 
-  if (!username) {
+  if (!state.username) {
     return (
       <header>
         <div className="btn-center">
@@ -33,4 +33,3 @@ const Header = () => {
 };
 
 export default Header;
-

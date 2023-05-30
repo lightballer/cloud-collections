@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -6,19 +6,15 @@ import { useStateValue } from "../../store/reducer";
 
 const Login = () => {
   const { state, dispatch } = useStateValue();
-  // const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleEmailChange = (event) => {
-    console.log({ email: event.target.value });
-
     setEmail(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
-    console.log({ password: event.target.value });
     setPassword(event.target.value);
   };
 
@@ -26,20 +22,10 @@ const Login = () => {
     event.preventDefault();
     console.log("Logging in with:", email, password);
     dispatch({ type: "username", payload: email });
-    localStorage.setItem("username", email);
+    localStorage.setItem("username", email); // change to generic func
   };
 
-  // useEffect(() => {
-
-  //   if (username) {
-  //     dispatch({ type: "username", payload: username });
-  //     navigate("/myfiles");
-  //     return null;
-  //   }
-  // }, [dispatch, navigate]);
-
-  const username = !!localStorage.getItem("username");
-  if (username) return <Navigate to={"/myfiles"} replace />;
+  if (state.username) return <Navigate to={"/myfiles"} replace />;
 
   return (
     <div className="container mt-5">
