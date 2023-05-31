@@ -6,15 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Headers,
-  UploadedFile,
-  UseInterceptors,
-  Req,
-  Injectable,
-  NestMiddleware,
-  NestModule,
-  MiddlewareConsumer,
-  RequestMethod,
   createParamDecorator,
   ExecutionContext,
   BadRequestException,
@@ -24,8 +15,6 @@ import {
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { raw } from 'body-parser';
 import { createWriteStream } from 'fs';
 import { Response } from 'express';
 
@@ -51,14 +40,6 @@ export class FilesController {
     return response
       .status(HttpStatus.CREATED)
       .send({ HttpCode: 201, Message: 'File uploaded.' });
-    // console.log(req['fileBuffer']);
-    // const fileData = Buffer.from(body);
-    // const fileName = body.originalname;
-    // console.log({ fileName });
-    // const writeStream = createWriteStream(`./uploads/${fileName}`);
-    // writeStream.write(fileData);
-    // writeStream.end();
-    // return 'hmm';
   }
 
   @Get()

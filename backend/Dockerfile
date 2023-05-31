@@ -1,10 +1,10 @@
 FROM postgres:latest
 
-COPY ./db/schema.sql /docker-entrypoint-initdb.d/
-
 ENV POSTGRES_USER user
 ENV POSTGRES_PASSWORD password
-ENV POSTGRES_DATABASE cloud_collections_db
+ENV POSTGRES_DB cloud_collections_db
+
+COPY ./db/schema.sql /docker-entrypoint-initdb.d/
 
 EXPOSE 5432
 
