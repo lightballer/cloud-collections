@@ -12,11 +12,10 @@ import {
   HttpStatus,
   Res,
 } from '@nestjs/common';
-import { FilesService } from './files.service';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
 import { createWriteStream } from 'fs';
 import { Response } from 'express';
+import { FilesService } from './files.service';
+import { UpdateFileDto } from './dto/update-file.dto';
 
 export const FileBuffer = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -32,7 +31,6 @@ export class FilesController {
 
   @Post()
   create(@FileBuffer() fileBuffer, @Res() response: Response) {
-    console.log({ fileBuffer });
     if (fileBuffer === null) throw new BadRequestException('File is required');
     const writeStream = createWriteStream(`./uploads/video.mkv`);
     writeStream.write(fileBuffer);

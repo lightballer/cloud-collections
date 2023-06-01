@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -29,7 +29,9 @@ export class AuthService {
     if (user) {
       const payload = { username: email, sub: user.id };
       return {
-        access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET }),
+        access_token: this.jwtService.sign(payload, {
+          secret: process.env.JWT_SECRET,
+        }),
       };
     }
 
