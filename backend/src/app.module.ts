@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
 import { JwtAuthModule } from './jwt/jwt.module';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
@@ -27,6 +26,6 @@ import { User } from './users/entities/user.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AppService],
 })
 export class AppModule {}

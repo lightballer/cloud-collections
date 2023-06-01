@@ -1,17 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  async validateUserById(userId: string) {
-    // Implement your user validation logic here
-    // This method should check if the user exists in your data source (e.g., database)
-    // and return the user object if found, or null if not found
-    // You can use any database or ORM of your choice
+  constructor(
+    private jwtService: JwtService,
+    private userService: UsersService,
+  ) {}
 
-    // Example implementation:
-    // const user = await this.userService.findById(userId);
-    // return user;
+  async validateUser(username: string, password: string): Promise<User | null> {
+    const user = await this.userService.findOneByUsername(username);
+    const [storedPassword, salt] = user.password.split('|');
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    return null; // Replace this line with your implementation
+    if (storedPassword === hashedPassword) return user;
+
+    return null;
+  }
+
+  async login(loginUserDto: LoginDto): Promise<{ access_token: string }> {
+    const { email, password } = loginUserDto;
+    const user = await this.validateUser(email, password);
+    if (user) {
+      const payload = { username: email, sub: user.id };
+      return { access_token: this.jwtService.sign(payload) };
+    }
+
+    throw new UnauthorizedException();
   }
 }
