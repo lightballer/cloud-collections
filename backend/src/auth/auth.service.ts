@@ -25,9 +25,12 @@ export class AuthService {
   async login(loginUserDto: LoginDto): Promise<{ access_token: string }> {
     const { email, password } = loginUserDto;
     const user = await this.validateUser(email, password);
+    console.log({ email, password });
     if (user) {
       const payload = { username: email, sub: user.id };
-      return { access_token: this.jwtService.sign(payload) };
+      return {
+        access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET }),
+      };
     }
 
     throw new UnauthorizedException();

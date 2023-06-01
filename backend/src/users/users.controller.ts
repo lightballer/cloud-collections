@@ -13,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
+import { CustomAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -31,6 +32,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(CustomAuthGuard)
   findOne(@Param('id') id: string) {
     return this.usersService.findById(+id);
   }
