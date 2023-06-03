@@ -11,11 +11,15 @@ import {
   BadRequestException,
   HttpStatus,
   Res,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
-import { createWriteStream } from 'fs';
-import { Response } from 'express';
+import { createWriteStream, statSync } from 'fs';
+import { Response, Request } from 'express';
 import { FilesService } from './files.service';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { CustomAuthGuard } from 'src/auth/auth.guard';
+import jwtDecode from 'jwt-decode';
 
 export const FileBuffer = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -29,20 +33,56 @@ export const FileBuffer = createParamDecorator(
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  @Post()
-  create(@FileBuffer() fileBuffer, @Res() response: Response) {
-    if (fileBuffer === null) throw new BadRequestException('File is required');
-    const writeStream = createWriteStream(`./uploads/video.mkv`);
-    writeStream.write(fileBuffer);
+  @Post(':name')
+  @UseGuards(CustomAuthGuard)
+  async create(
+    @FileBuffer() fileBuffer,
+    @Res() response: Response,
+    @Req() request: Request,
+    @Param('name') name: string,
+  ) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
 
-    return response
-      .status(HttpStatus.CREATED)
-      .send({ HttpCode: 201, Message: 'File uploaded.' });
+    if (fileBuffer === null) throw new BadRequestException('File is required');
+
+    return new Promise((resolve, reject) => {
+      const filePath = `./uploads/${sub}-${name}`;
+
+      const writeStream = createWriteStream(filePath);
+      writeStream.write(fileBuffer);
+
+      writeStream.on('finish', async () => {
+        const fileSize = statSync(filePath).size;
+
+        const savedFile = await this.filesService.create({
+          name,
+          size: BigInt(fileSize),
+          upload_date: new Date(),
+          user_id: sub,
+        });
+
+        resolve(
+          response
+            .status(HttpStatus.CREATED)
+            .send({ HttpCode: 201, Message: 'File uploaded.' }),
+        );
+      });
+
+      writeStream.on('error', (error) => {
+        reject(error);
+      });
+
+      writeStream.end();
+    });
   }
 
   @Get()
-  findAll() {
-    return this.filesService.findAll();
+  @UseGuards(CustomAuthGuard)
+  findAllUserFiles(@Req() request: Request) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
+    return this.filesService.findAllUserFiles(sub);
   }
 
   @Get(':id')

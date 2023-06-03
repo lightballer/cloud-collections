@@ -4,13 +4,17 @@ import "./MyFiles.css";
 import { getFiles } from "../http/files";
 import File from "../File";
 import React from "react";
+import useAuth from "useAuth";
 
 const MyFiles = () => {
+  const { getToken } = useAuth();
+
   const [filesList, setFilesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getFiles().then((files) => {
+    const token = getToken();
+    getFiles(token).then((files) => {
       setFilesList(files);
       setIsLoading(false);
     });

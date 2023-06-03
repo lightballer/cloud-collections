@@ -22,9 +22,13 @@ const useAuth = () => {
     } catch (err) {
       return false;
     }
-  }
+  };
 
-  return { getUser, logout, saveToken };
+  const getToken = () => {
+    return sessionStorage.getItem("token");
+  };
+
+  return { getUser, logout, saveToken, getToken };
 };
 
 export default useAuth;

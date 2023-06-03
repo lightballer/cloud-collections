@@ -8,8 +8,7 @@ export class FileBufferMiddleware implements NestMiddleware {
       verify: (req, res, buffer) => {
         req['fileBuffer'] = buffer;
       },
-      // limit: '5mb',
-      limit: '500gb',
+      limit: '500mb',
       type: req.headers['content-type'],
     })(req, res as any, next);
   }

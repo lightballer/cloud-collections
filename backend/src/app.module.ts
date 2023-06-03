@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
+import { File } from './files/entities/file.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { User } from './users/entities/user.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
-      entities: [User],
+      entities: [User, File],
     }),
   ],
   controllers: [AppController],

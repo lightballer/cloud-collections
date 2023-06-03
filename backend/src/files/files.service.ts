@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { File } from './entities/file.entity';
 
 @Injectable()
 export class FilesService {
+  constructor(
+    @InjectRepository(File) private fileRepository: Repository<File>,
+  ) {}
+
   create(createFileDto: CreateFileDto) {
-    return 'This action adds a new file';
+    return this.fileRepository.save(createFileDto);
   }
 
-  findAll() {
-    return `This action returns all files`;
+  async findAllUserFiles(userId) {
+    const files = await this.fileRepository
+      .createQueryBuilder('files')
+      .where('files.user_id = :userId', { userId })
+      .getMany();
+
+    return files;
   }
 
   findOne(id: number) {

@@ -37,7 +37,7 @@ const Header = () => {
         </Link>
 
         <div className="link">
-          <button className="btn btn-dark btn-lg" onClick={handleLogoutClick}>
+          <button className="btn btn-dark btn-lg text-danger" onClick={handleLogoutClick}>
             Logout
           </button>
         </div>
