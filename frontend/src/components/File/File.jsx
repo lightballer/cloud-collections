@@ -1,4 +1,5 @@
-import "./File.css"
+import React from "react";
+import "./File.css";
 
 const File = ({ file }) => {
   const { name, updatedAt, url } = file;

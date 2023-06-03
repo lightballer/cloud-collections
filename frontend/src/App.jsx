@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import "./App.css";
 import useAuth from "./useAuth";
@@ -7,12 +7,22 @@ import Header from "./components/Header";
 import { useStateValue } from "./store/reducer";
 
 function App() {
-  const username = useAuth();
+  const { getUser } = useAuth();
   const { dispatch } = useStateValue();
 
   useEffect(() => {
-    if (username) dispatch({ type: "username", payload: username });
-  }, [dispatch, username]);
+    const token = sessionStorage.getItem("token");
+    console.log({ token });
+    if (token) {
+      getUser(token).then((user) => {
+        if (user) {
+          dispatch({ type: "username", payload: user.username });
+        } else {
+          dispatch({ type: "username", payload: "" });
+        }
+      });
+    }
+  }, []);
 
   return (
     <div className="container-fluid gray-bg" style={{ minHeight: "100vh" }}>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { useStateValue } from "../../store/reducer";
+import React from "react";
 
 const Header = () => {
   const { state } = useStateValue();

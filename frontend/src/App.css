@@ -27,7 +27,8 @@ nav ul li button .navButton:hover {
 }*/
 
 .gray-bg {
-  background-color: #35383c;
+  /* background-color: #35383c; */
+  background-color: whitesmoke;
 }
 
 header {

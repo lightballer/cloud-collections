@@ -1,14 +1,19 @@
-import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.css";
-
+import { useMemo, useState } from "react";
 import { useStateValue } from "../../store/reducer";
+import { Link, Navigate } from "react-router-dom";
+import React from "react";
 
-const Login = () => {
-  const { state, dispatch } = useStateValue();
+const Register = () => {
+  const { state } = useStateValue();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatedPassword, setRepeatedPassword] = useState("");
+
+  const passwordsMatch = useMemo(
+    () => password === repeatedPassword,
+    [password, repeatedPassword]
+  );
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -18,11 +23,16 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
+  const handleRepeatedPasswordChange = (event) => {
+    setRepeatedPassword(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Logging in with:", email, password);
-    dispatch({ type: "username", payload: email });
-    localStorage.setItem("username", email); // change to generic func
+    if (passwordsMatch) {
+      console.log({ email, password });
+      // localStorage.setItem("username", email); // change to generic func
+    }
   };
 
   if (state.username) return <Navigate to={"/myfiles"} replace />;
@@ -33,7 +43,7 @@ const Login = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title">Login</h3>
+              <h3 className="card-title">Sign up</h3>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
@@ -67,13 +77,38 @@ const Login = () => {
                     />
                   </div>
                 </div>
+                <div className="row mb-3">
+                  <label htmlFor="password" className="col-sm-2 col-form-label">
+                    Repeat password
+                  </label>
+                  <div className="col-sm-10">
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="repeated-password"
+                      value={repeatedPassword}
+                      onChange={handleRepeatedPasswordChange}
+                      required
+                    />
+                  </div>
+                  {!passwordsMatch && (
+                    <div className="help-block text-danger">
+                      Passwords do not match
+                    </div>
+                  )}
+                </div>
                 <div className="d-grid gap-2">
                   <button type="submit" className="btn btn-primary btn-sm">
-                    Login
+                    Sign up
                   </button>
                 </div>
               </form>
             </div>
+            <div className="text-center">
+                <p>
+                  Already have an account? <Link to="/login">Log in</Link>
+                </p>
+              </div>  
           </div>
         </div>
       </div>
@@ -81,4 +116,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

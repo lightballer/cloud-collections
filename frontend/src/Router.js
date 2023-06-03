@@ -3,11 +3,13 @@ import Upload from "./components/Upload";
 import MyFiles from "./components/MyFiles";
 import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
+import Register from "./components/Register/SignUp";
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/myfiles"
         element={

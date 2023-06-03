@@ -1,6 +1,7 @@
 import { useCallback, useState, useRef } from "react";
 
 import "./Upload.css";
+import React from "react";
 
 const Upload = () => {
   const [files, setFiles] = useState([]);
@@ -19,8 +20,6 @@ const Upload = () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-
-  console.log(files);
 
   return (
     <div className="upload__container">
@@ -43,7 +42,9 @@ const Upload = () => {
       </form>
       <ul className="list-group list-group-flush">
         {files.map((file, i) => (
-          <li className="list-group-item list-group-item-fixed" key={i}>{file?.name}</li>
+          <li className="list-group-item list-group-item-fixed" key={i}>
+            {file?.name}
+          </li>
         ))}
       </ul>
     </div>

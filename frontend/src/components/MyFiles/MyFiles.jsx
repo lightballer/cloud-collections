@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./MyFiles.css";
 import { getFiles } from "../http/files";
 import File from "../File";
+import React from "react";
 
 const MyFiles = () => {
   const [filesList, setFilesList] = useState([]);
