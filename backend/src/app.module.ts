@@ -1,10 +1,9 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
-import { JwtAuthModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 
@@ -12,7 +11,6 @@ import { User } from './users/entities/user.entity';
   imports: [
     UsersModule,
     FilesModule,
-    JwtAuthModule,
     AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

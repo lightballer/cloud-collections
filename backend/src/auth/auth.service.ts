@@ -25,9 +25,13 @@ export class AuthService {
   async login(loginUserDto: LoginDto): Promise<{ access_token: string }> {
     const { email, password } = loginUserDto;
     const user = await this.validateUser(email, password);
-    console.log({ email, password });
+
     if (user) {
-      const payload = { username: email, sub: user.id };
+      const payload = {
+        username: email,
+        sub: user.id,
+        expirationDate: Math.floor(Date.now() / 1000) + 3600,
+      };
       return {
         access_token: this.jwtService.sign(payload, {
           secret: process.env.JWT_SECRET,

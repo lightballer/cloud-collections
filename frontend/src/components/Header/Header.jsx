@@ -2,9 +2,16 @@ import { Link } from "react-router-dom";
 
 import { useStateValue } from "../../store/reducer";
 import React from "react";
+import useAuth from "useAuth";
 
 const Header = () => {
-  const { state } = useStateValue();
+  const { state, dispatch } = useStateValue();
+  const { logout } = useAuth();
+
+  const handleLogoutClick = () => {
+    const logoutResult = logout();
+    if (logoutResult) dispatch({ type: "username", payload: "" });
+  };
 
   if (!state.username) {
     return (
@@ -28,6 +35,12 @@ const Header = () => {
         <Link to="/upload" className="link">
           <button className="btn btn-dark btn-lg">Upload</button>
         </Link>
+
+        <div className="link">
+          <button className="btn btn-dark btn-lg" onClick={handleLogoutClick}>
+            Logout
+          </button>
+        </div>
       </div>
     </header>
   );

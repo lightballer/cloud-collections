@@ -13,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { CustomAuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import jwt_decode from 'jwt-decode';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -23,9 +24,16 @@ export class UsersController {
     const existingUser = await this.usersService.findOneByUsername(
       createUserDto.email,
     );
+    console.log({ existingUser, createUserDto });
     if (existingUser)
       throw new BadRequestException('User with such email already exists');
-    return this.usersService.create(createUserDto);
+    const createdUser = await this.usersService.create(createUserDto);
+    if (!createdUser)
+      throw new BadRequestException('Error while creating new user');
+    return {
+      username: createdUser.username,
+      email: createdUser.email,
+    };
   }
 
   // @Get()
@@ -36,15 +44,16 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(CustomAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string) {
     return this.usersService.findById(+id);
   }
 
   @Get()
   @UseGuards(CustomAuthGuard)
+  // @UseGuards(AuthGuard('jwt'))
   getUserInfo(@Req() request: Request) {
     const token = request.headers.authorization.split('Bearer ')[1];
-    console.log(token);
     const decoded: any = jwt_decode(token);
     const id = decoded.sub;
     return this.usersService.findById(+id);

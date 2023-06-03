@@ -6,7 +6,25 @@ const useAuth = () => {
     return user;
   };
 
-  return { getUser };
+  const logout = () => {
+    try {
+      sessionStorage.removeItem("token");
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
+
+  const saveToken = (token) => {
+    try {
+      sessionStorage.setItem("token", token);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  return { getUser, logout, saveToken };
 };
 
 export default useAuth;

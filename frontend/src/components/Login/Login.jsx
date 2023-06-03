@@ -4,9 +4,11 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import { useStateValue } from "../../store/reducer";
 import { login } from "components/http/auth";
+import useAuth from "useAuth";
 
 const Login = () => {
   const { state, dispatch } = useStateValue();
+  const { saveToken } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,12 +23,10 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Logging in with:", email, password);
     login(email, password).then((token) => {
-      console.log({ token });
       if (token) {
-        sessionStorage.setItem("token", token);
-        dispatch({ type: "username", payload: email });
+        const saveResult = saveToken(token);
+        if (saveResult) dispatch({ type: "username", payload: email });
       }
     });
   };

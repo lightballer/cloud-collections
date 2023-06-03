@@ -1,19 +1,28 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStateValue } from "../../store/reducer";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import React from "react";
+import { signUp } from "components/http/auth";
 
 const Register = () => {
-  const { state } = useStateValue();
+  const { state, dispatch } = useStateValue();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatedPassword, setRepeatedPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const passwordsMatch = useMemo(
     () => password === repeatedPassword,
     [password, repeatedPassword]
   );
+
+  useEffect(() => {
+    if (password !== repeatedPassword)
+      setErrorMessage("Passwords are not matching");
+    else setErrorMessage("");
+  }, [password, passwordsMatch, repeatedPassword]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -30,8 +39,14 @@ const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (passwordsMatch) {
+      signUp(email, password).then((user) => {
+        if (user) {
+          return navigate("/login");
+        } else {
+          setErrorMessage("User with such email already exists");
+        }
+      });
       console.log({ email, password });
-      // localStorage.setItem("username", email); // change to generic func
     }
   };
 
@@ -91,10 +106,8 @@ const Register = () => {
                       required
                     />
                   </div>
-                  {!passwordsMatch && (
-                    <div className="help-block text-danger">
-                      Passwords do not match
-                    </div>
+                  {(!passwordsMatch || errorMessage) && (
+                    <div className="help-block text-danger">{errorMessage}</div>
                   )}
                 </div>
                 <div className="d-grid gap-2">
@@ -105,10 +118,10 @@ const Register = () => {
               </form>
             </div>
             <div className="text-center">
-                <p>
-                  Already have an account? <Link to="/login">Log in</Link>
-                </p>
-              </div>  
+              <p>
+                Already have an account? <Link to="/login">Log in</Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

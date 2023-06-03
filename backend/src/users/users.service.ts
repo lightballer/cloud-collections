@@ -13,6 +13,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    console.log({ createUserDto });
     const { username, email, password } = createUserDto;
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);

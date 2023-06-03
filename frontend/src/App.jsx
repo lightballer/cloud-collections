@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    console.log({ token });
+
     if (token) {
       getUser(token).then((user) => {
         if (user) {

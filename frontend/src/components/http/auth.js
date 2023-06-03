@@ -33,6 +33,21 @@ const getUserInfo = async (token) => {
   return null;
 };
 
-const signUp = async () => {};
+const signUp = async (email, password) => {
+  const response = await fetch(`${baseUrl}/users/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (response.status === 201) {
+    const user = await response.json();
+    return user;
+  }
+
+  return null;
+};
 
 export { login, getUserInfo, signUp };
