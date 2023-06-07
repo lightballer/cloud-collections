@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import "./MyFiles.css";
-import { getFiles } from "../http/files";
+import { getFilePreview, getFiles } from "../http/files";
 import File from "../File";
 import React from "react";
 import useAuth from "useAuth";
@@ -14,10 +14,26 @@ const MyFiles = () => {
 
   useEffect(() => {
     const token = getToken();
-    getFiles(token).then((files) => {
-      setFilesList(files);
-      setIsLoading(false);
-    });
+    getFiles(token)
+      .then(async (files) => {
+        const filesWithPreview = [];
+        for (const file of files) {
+          const dataUrl = await getFilePreview(token, file.id);
+          console.log({ dataUrl });
+          filesWithPreview.push({ ...file, dataUrl });
+        }
+        return filesWithPreview;
+
+        // return files.map(async (file) => {
+        //   const dataUrl = await getFilePreview(token, file.id);
+        //   console.log({ dataUrl });
+        //   return {...file, dataUrl}
+        //});
+      })
+      .then((files) => {
+        setFilesList(files);
+        setIsLoading(false);
+      });
   }, []);
 
   if (isLoading) {

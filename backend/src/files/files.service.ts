@@ -24,8 +24,12 @@ export class FilesService {
     return files;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} file`;
+  findOne(id: number, userId: string) {
+    return this.fileRepository
+      .createQueryBuilder('files')
+      .where('files.user_id = :userId', { userId })
+      .where('files.id = :id', { id })
+      .getOne();
   }
 
   update(id: number, updateFileDto: UpdateFileDto) {

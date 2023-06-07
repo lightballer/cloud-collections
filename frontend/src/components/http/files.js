@@ -36,4 +36,24 @@ const getFiles = async (token) => {
   // ];
 };
 
-export { getFiles };
+const getFilePreview = async (token, id) => {
+  const response = await fetch(`${baseUrl}/files/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status === 200) {
+    // const raw = await response.json();
+    const buffer = await response.arrayBuffer();
+    // const blob = new Blob([buffer], { type: response.headers["content-type"] });
+    const blob = new Blob([buffer]);
+    const dataURL = URL.createObjectURL(blob);
+    return dataURL;
+  }
+
+  return null;
+};
+
+export { getFiles, getFilePreview };
