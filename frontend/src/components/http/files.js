@@ -37,7 +37,7 @@ const getFiles = async (token) => {
 };
 
 const getFilePreview = async (token, id) => {
-  const response = await fetch(`${baseUrl}/files/${id}`, {
+  const response = await fetch(`${baseUrl}/files/${id}/raw`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

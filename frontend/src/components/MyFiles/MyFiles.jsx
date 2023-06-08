@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import "./MyFiles.css";
 import { getFilePreview, getFiles } from "../http/files";
-import File from "../File";
+import FileCard from "../FileCard";
 import React from "react";
 import useAuth from "useAuth";
 
@@ -23,18 +23,29 @@ const MyFiles = () => {
           filesWithPreview.push({ ...file, dataUrl });
         }
         return filesWithPreview;
-
-        // return files.map(async (file) => {
-        //   const dataUrl = await getFilePreview(token, file.id);
-        //   console.log({ dataUrl });
-        //   return {...file, dataUrl}
-        //});
       })
       .then((files) => {
         setFilesList(files);
         setIsLoading(false);
       });
   }, []);
+
+  const handleSaveClick = (id, filename) => {
+    // send updated data
+    const token = getToken();
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}/files/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: filename }),
+    })
+      .then((data) => data.json())
+      .catch((err) => console.error(err));
+    // request updated file data
+    window.location.reload();
+  };
 
   if (isLoading) {
     return (
@@ -50,7 +61,7 @@ const MyFiles = () => {
     <div className="files-list_container">
       <div className="card-deck cards-container">
         {filesList.map((file) => (
-          <File key={file.id} file={file} />
+          <FileCard key={file.id} file={file} onSaveClick={handleSaveClick} />
         ))}
       </div>
     </div>

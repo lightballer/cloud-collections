@@ -32,11 +32,22 @@ export class FilesService {
       .getOne();
   }
 
-  update(id: number, updateFileDto: UpdateFileDto) {
-    return `This action updates a #${id} file`;
+  update(id: number, userId: string, updateFileDto: UpdateFileDto) {
+    return this.fileRepository
+      .createQueryBuilder('files')
+      .update()
+      .set({ ...updateFileDto })
+      .where('user_id = :userId', { userId })
+      .andWhere('id = :id', { id })
+      .execute();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} file`;
+  remove(id: number, userId: string) {
+    return this.fileRepository
+      .createQueryBuilder('files')
+      .where('files.user_id = :userId', { userId })
+      .where('files.id = :id', { id })
+      .delete()
+      .execute();
   }
 }

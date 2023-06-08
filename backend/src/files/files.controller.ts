@@ -50,18 +50,23 @@ export class FilesController {
     if (fileBuffer === null) throw new BadRequestException('File is required');
 
     return new Promise((resolve, reject) => {
-      const filePath = `./uploads/${sub}-${name}`;
+      const uploadDate = Date.now();
+      const filename = `${sub}-${uploadDate}`;
+      const fileExtension = name.substring(name.lastIndexOf('.') + 1);
 
+      const filePath = `./uploads/${filename}.${fileExtension}`;
+      console.log({ filePath });
       const writeStream = createWriteStream(filePath);
       writeStream.write(fileBuffer);
 
       writeStream.on('finish', async () => {
-        const fileSize = statSync(filePath).size;
+        console.log(uploadDate);
 
+        const fileSize = statSync(filePath).size;
         const savedFile = await this.filesService.create({
           name,
           size: BigInt(fileSize),
-          upload_date: new Date(),
+          upload_date: new Date(uploadDate),
           user_id: sub,
         });
 
@@ -109,7 +114,17 @@ export class FilesController {
   }
 
   @Get(':id')
-  async findOne(
+  @UseGuards(CustomAuthGuard)
+  async findOne(@Param('id') id: string, @Req() request: Request) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
+
+    return this.filesService.findOne(+id, sub);
+  }
+
+  @Get(':id/raw')
+  @UseGuards(CustomAuthGuard)
+  async getRawOne(
     @Param('id') id: string,
     @Req() request: Request,
     @Res() res: Response,
@@ -121,29 +136,57 @@ export class FilesController {
       throw new NotFoundException('File not found');
     }
 
-    const { name } = file;
+    const { upload_date, name } = file;
 
-    const filename = `${sub}-${name}`;
+    const fileExtension = name.substring(name.lastIndexOf('.') + 1);
 
-    const path = `./uploads/${filename}`;
+    const filename = `${sub}-${new Date(upload_date).getTime()}`;
+
+    const path = `./uploads/${filename}.${fileExtension}`;
+
+    console.log({ path });
 
     const fileBuffer = await this.getFileBuffer(path);
 
-    const mimeType = mime.contentType(filename);
+    const mimeType = mime.lookup(path);
+
+    console.log({ mimeType, filename });
 
     res.setHeader('Content-Type', mimeType);
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
     res.send(fileBuffer);
+    // fileBuffer.pipe(res); TODO
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-    return this.filesService.update(+id, updateFileDto);
+  @UseGuards(CustomAuthGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateFileDto: UpdateFileDto,
+    @Req() request: Request,
+  ) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
+
+    const updateResult = await this.filesService.update(
+      +id,
+      sub,
+      updateFileDto,
+    );
+
+    console.log({ updateResult });
+
+    return;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filesService.remove(+id);
+  @UseGuards(CustomAuthGuard)
+  async remove(@Param('id') id: string, @Req() request: Request) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
+    await this.filesService.remove(+id, sub);
+
+    return { message: 'ok' };
   }
 }
