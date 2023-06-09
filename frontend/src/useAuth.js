@@ -1,4 +1,4 @@
-import { getUserInfo } from "components/http/auth";
+import { getUserInfo } from "http/auth";
 
 const useAuth = () => {
   const getUser = async (token) => {

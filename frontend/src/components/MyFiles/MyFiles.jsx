@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./MyFiles.css";
-import { getFilePreview, getFiles } from "../http/files";
+import { getFilePreview, getFiles, updateFilename } from "../../http/files";
 import FileCard from "../FileCard";
-import React from "react";
 import useAuth from "useAuth";
 
 const MyFiles = () => {
@@ -31,20 +30,8 @@ const MyFiles = () => {
   }, []);
 
   const handleSaveClick = (id, filename) => {
-    // send updated data
     const token = getToken();
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}/files/${id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: filename }),
-    })
-      .then((data) => data.json())
-      .catch((err) => console.error(err));
-    // request updated file data
-    window.location.reload();
+    updateFilename(token, id, filename).then(() => window.location.reload());
   };
 
   if (isLoading) {

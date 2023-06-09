@@ -2,6 +2,7 @@ import React, { useCallback, useState, useRef } from "react";
 
 import "./Upload.css";
 import useAuth from "useAuth";
+import { upload } from "http/files";
 
 const Upload = () => {
   const { getToken } = useAuth();
@@ -24,38 +25,9 @@ const Upload = () => {
     const token = getToken();
     const file = files[0];
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const fileContent = event.target.result;
-
-      try {
-        const response = await fetch(
-          `http://${process.env.REACT_APP_BACKEND_URL}/files/${file.name}`,
-          {
-            method: "POST",
-            body: fileContent,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": file.type,
-            },
-          }
-        );
-
-        if (response.ok) {
-          console.log("File sent successfully");
-        } else {
-          console.error(
-            "Failed to send file:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error sending file:", error);
-      }
-    };
-
-    reader.readAsArrayBuffer(file);
+    upload(token, file).then((uploadResult) => {
+      window.location.reload();
+    });
   };
 
   return (

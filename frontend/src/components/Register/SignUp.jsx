@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useStateValue } from "../../store/reducer";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import React from "react";
-import { signUp } from "components/http/auth";
+import { signUp } from "http/auth";
 
 const Register = () => {
   const { state, dispatch } = useStateValue();

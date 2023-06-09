@@ -3,7 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
 import { useStateValue } from "../../store/reducer";
-import { login } from "components/http/auth";
+import { login } from "http/auth";
 import useAuth from "useAuth";
 
 const Login = () => {

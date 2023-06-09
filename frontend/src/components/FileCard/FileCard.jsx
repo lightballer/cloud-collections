@@ -3,6 +3,7 @@ import "./FileCard.css";
 import useAuth from "useAuth";
 import FilePreview from "components/FilePreview/FilePreview";
 import Modal from "react-modal";
+import { deleteFile } from "http/files";
 
 const FileCard = ({ file, onSaveClick }) => {
   const { name, upload_date, dataUrl, id } = file;
@@ -36,16 +37,10 @@ const FileCard = ({ file, onSaveClick }) => {
 
   const handleDeleteClick = () => {
     const token = getToken();
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}/files/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((data) => data.json())
-      .then((data) => {
-        window.location.reload();
-      });
+
+    deleteFile(token, id).then(() => {
+      window.location.reload();
+    });
   };
 
   const date = upload_date ? upload_date.split("T")[0] : "";
@@ -61,8 +56,7 @@ const FileCard = ({ file, onSaveClick }) => {
   if (isOpen) {
     return (
       <Modal isOpen={isOpen} onRequestClose={closeModal}>
-        <button onClick={closeModal}>Close</button>
-        <FilePreview id={id} />
+        <FilePreview id={id} name={name} />
       </Modal>
     );
   }
@@ -71,7 +65,10 @@ const FileCard = ({ file, onSaveClick }) => {
     <div className="card mx-3 smaller-card">
       <img className="card-img-top" src={dataUrl} alt="file" />
       <div className="card-body">
-        <div className="d-flex align-items-center">
+        <div
+          className="d-flex align-items-center"
+          style={{ overflow: "hidden" }}
+        >
           {isEditing ? (
             <>
               <input
