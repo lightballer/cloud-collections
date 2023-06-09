@@ -17,9 +17,13 @@ const MyFiles = () => {
       .then(async (files) => {
         const filesWithPreview = [];
         for (const file of files) {
-          const dataUrl = await getFilePreview(token, file.id);
-          console.log({ dataUrl });
-          filesWithPreview.push({ ...file, dataUrl });
+          const extension = file.name.substring(file.name.lastIndexOf(".") + 1);
+          if (["png", "jpg", "jpeg", "gif"].includes(extension)) {
+            const dataUrl = await getFilePreview(token, file.id);
+            filesWithPreview.push({ ...file, dataUrl });
+          } else {
+            filesWithPreview.push({ ...file });
+          }
         }
         return filesWithPreview;
       })

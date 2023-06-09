@@ -3,7 +3,7 @@ import "./FileCard.css";
 import useAuth from "useAuth";
 import FilePreview from "components/FilePreview/FilePreview";
 import Modal from "react-modal";
-import { deleteFile } from "http/files";
+import { deleteFile, getFilePreview } from "http/files";
 
 const FileCard = ({ file, onSaveClick }) => {
   const { name, upload_date, dataUrl, id } = file;
@@ -16,13 +16,15 @@ const FileCard = ({ file, onSaveClick }) => {
   const [editedName, setEditedName] = useState(fileName);
 
   const handleDownloadClick = () => {
-    const downloadUrl = dataUrl;
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const token = getToken();
+    getFilePreview(token, id).then((dataUrl) => {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
   };
 
   const handleEditClick = () => {
@@ -60,10 +62,26 @@ const FileCard = ({ file, onSaveClick }) => {
       </Modal>
     );
   }
+  const extension = file.name.substring(file.name.lastIndexOf(".") + 1);
 
   return (
     <div className="card mx-3 smaller-card">
-      <img className="card-img-top" src={dataUrl} alt="file" />
+      {dataUrl ? (
+        <img className="card-img-top" src={dataUrl} alt="file" />
+      ) : (
+        <div
+          className="card-img-top"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ fontSize: "50px", overflow: "hidden" }}>
+            <code>{extension.toUpperCase()}</code>
+          </div>
+        </div>
+      )}
       <div className="card-body">
         <div
           className="d-flex align-items-center"
@@ -95,7 +113,7 @@ const FileCard = ({ file, onSaveClick }) => {
           </button>
         ) : (
           <button onClick={handleEditClick} className="btn btn-secondary mt-2">
-            <i className="fas fa-pencil-alt"></i> Edit
+            <i className="fas fa-pencil-alt"></i> Edit title
           </button>
         )}
         <button onClick={handleDownloadClick} className="btn btn-primary mt-2">
