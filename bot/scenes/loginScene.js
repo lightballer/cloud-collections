@@ -1,7 +1,8 @@
 const { Scenes } = require("telegraf");
 
+const { saveToken, deleteToken } = require("../initDb");
+
 const requestAuthToken = async (email, password) => {
-  console.log(email, password);
   const response = await fetch(`http://${process.env.BACKEND_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -40,14 +41,16 @@ loginScene.on("text", async (ctx) => {
   const token = await requestAuthToken(email, password);
 
   if (token) {
-    console.log({ token }); // save token to local db
+    const userId = ctx.from.id;
+    await deleteToken(userId);
+    await saveToken(userId, token); // save token to local db
     await ctx.reply("You are logged in!");
   } else {
     ctx.session.email = undefined;
     ctx.session.password = undefined;
     await ctx.reply("Invalid email or password. Please try again. /login");
-    await ctx.scene.leave();
   }
+  await ctx.scene.leave();
 });
 
 module.exports = { loginScene };

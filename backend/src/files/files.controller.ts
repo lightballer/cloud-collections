@@ -153,7 +153,10 @@ export class FilesController {
     console.log({ mimeType, filename });
 
     res.setHeader('Content-Type', mimeType);
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${filename}.${fileExtension}"`,
+    );
 
     res.send(fileBuffer);
     // fileBuffer.pipe(res); TODO

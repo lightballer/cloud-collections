@@ -11,7 +11,6 @@ const Upload = () => {
 
   const handleFileChange = useCallback((event) => {
     const selectedFiles = event.target.files;
-    console.log({ selectedFiles });
     if (selectedFiles) setFiles((oldFiles) => [...oldFiles, ...selectedFiles]);
   }, []);
 

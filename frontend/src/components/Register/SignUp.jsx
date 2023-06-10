@@ -46,7 +46,6 @@ const Register = () => {
           setErrorMessage("User with such email already exists");
         }
       });
-      console.log({ email, password });
     }
   };
 
