@@ -1,23 +1,27 @@
-const { Telegraf, session } = require("telegraf");
-const { message } = require("telegraf/filters");
+const { Telegraf, session, Scenes } = require("telegraf");
 const { SQLite } = require("@telegraf/session/sqlite");
-const { Stage } = require("telegraf/typings/scenes");
+
+const { loginScene } = require("./loginScene");
 
 const TOKEN = process.env.BOT_TOKEN;
 
-const store = SQLite({
-  filename: "./telegraf-sessions.sqlite",
-});
-
 const bot = new Telegraf(TOKEN);
 
-bot.hears('login', ctx => {
-    ctx.reply('Please enter your username:');
-});
+const stage = new Scenes.Stage([loginScene]);
+bot.use(session());
+bot.use(stage.middleware());
 
-bot.on('text', ctx => {
-    ctx.
-})
+bot.command("login", (ctx) => ctx.scene.enter("login"));
+bot.start((ctx) =>
+  ctx.reply(
+    "Welcome to Cloud Collections!\nType /login to log in to system, /upload to upload file, /download to get file"
+  )
+);
+
+bot.launch();
+// Enable graceful stop
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 // bot.use(session({ store }));
 
@@ -34,7 +38,6 @@ bot.on('text', ctx => {
 // bot.hears("hi", (ctx) => ctx.reply("Hey there"));
 // bot.hears('/download', (ctx) => ctx.reply());
 
-bot.launch();
-// Enable graceful stop
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+// const store = SQLite({
+//   filename: "./telegraf-sessions.sqlite",
+// });
