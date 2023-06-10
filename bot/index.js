@@ -11,22 +11,22 @@ const store = SQLite({
 
 const bot = new Telegraf(TOKEN);
 
-bot.use(session({ store }));
+bot.hears('login', ctx => {
+    ctx.reply('Please enter your username:');
+});
+
+bot.on('text', ctx => {
+    ctx.
+})
+
+// bot.use(session({ store }));
 
 // Create a new stage
-const loginStage = new Stage();
-
-const { Scene } = Telegraf;
+// const loginStage = new Stage();
 
 // Define the login scene
-loginStage.register(
-  new Scene("login", (ctx) => {
-    ctx.reply("Please enter your username:");
-    ctx.scene.next();
-  })
-);
 
-bot.use(loginStage.middleware());
+// bot.use(loginStage.middleware());
 
 // bot.start((ctx) => ctx.reply("Welcome"));
 // bot.help((ctx) => ctx.reply("Send me a sticker"));
