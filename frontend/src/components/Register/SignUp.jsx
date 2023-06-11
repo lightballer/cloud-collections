@@ -5,7 +5,7 @@ import React from "react";
 import { signUp } from "http/auth";
 
 const Register = () => {
-  const { state, dispatch } = useStateValue();
+  const { state } = useStateValue();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
