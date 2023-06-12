@@ -21,26 +21,18 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    const existingUser = await this.usersService.findOneByUsername(
+    const existingUser = await this.usersService.findOneByEmail(
       createUserDto.email,
     );
-    console.log({ existingUser, createUserDto });
     if (existingUser)
       throw new BadRequestException('User with such email already exists');
     const createdUser = await this.usersService.create(createUserDto);
     if (!createdUser)
       throw new BadRequestException('Error while creating new user');
     return {
-      username: createdUser.username,
       email: createdUser.email,
     };
   }
-
-  // @Get()
-  // @UseGuards(CustomAuthGuard)
-  // findAll() {
-  //   return this.usersService.findAll();
-  // }
 
   @Get(':id')
   @UseGuards(CustomAuthGuard)
@@ -51,7 +43,6 @@ export class UsersController {
 
   @Get()
   @UseGuards(CustomAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
   getUserInfo(@Req() request: Request) {
     const token = request.headers.authorization.split('Bearer ')[1];
     const decoded: any = jwt_decode(token);

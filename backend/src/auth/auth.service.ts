@@ -12,8 +12,8 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await this.userService.findOneByUsername(username);
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.userService.findOneByEmail(email);
     const [storedPassword, salt] = user.password.split('|');
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -28,7 +28,7 @@ export class AuthService {
 
     if (user) {
       const payload = {
-        username: email,
+        email,
         sub: user.id,
         expirationDate: Math.floor(Date.now() / 1000) + 3600,
       };

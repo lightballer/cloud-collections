@@ -159,7 +159,6 @@ export class FilesController {
     );
 
     res.send(fileBuffer);
-    // fileBuffer.pipe(res); TODO
   }
 
   @Patch(':id')
