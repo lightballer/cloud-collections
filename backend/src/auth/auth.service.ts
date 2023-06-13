@@ -28,7 +28,6 @@ export class AuthService {
 
     if (user) {
       const payload = {
-        email,
         sub: user.id,
         expirationDate: Math.floor(Date.now() / 1000) + 3600,
       };
@@ -39,6 +38,6 @@ export class AuthService {
       };
     }
 
-    throw new UnauthorizedException();
+    return null;
   }
 }

@@ -31,14 +31,8 @@ export class UsersController {
       throw new BadRequestException('Error while creating new user');
     return {
       email: createdUser.email,
+      id: createdUser.id
     };
-  }
-
-  @Get(':id')
-  @UseGuards(CustomAuthGuard)
-  @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: string) {
-    return this.usersService.findById(+id);
   }
 
   @Get()

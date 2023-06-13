@@ -4,6 +4,10 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 
+interface JwtPayload {
+  sub: number;
+  expirationDate: number;
+}
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
@@ -17,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: JwtPayload) {
     const { expirationDate } = payload;
     const currentDate = new Date().getTime() / 1000;
     if (currentDate > expirationDate) {
