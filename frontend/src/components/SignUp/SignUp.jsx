@@ -4,7 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import React from "react";
 import { signUp } from "http/auth";
 
-const Register = () => {
+const SignUp = () => {
   const { state } = useStateValue();
   const navigate = useNavigate();
 
@@ -128,4 +128,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignUp;

@@ -16,7 +16,7 @@ function App() {
     if (token) {
       getUser(token).then((user) => {
         if (user) {
-          dispatch({ type: "username", payload: user.username });
+          dispatch({ type: "username", payload: user.email });
         } else {
           dispatch({ type: "username", payload: "" });
         }

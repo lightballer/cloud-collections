@@ -27,7 +27,6 @@ const getFilePreview = async (token, id) => {
   if (response.status === 200) {
     const buffer = await response.arrayBuffer();
     const blob = new Blob([buffer], { type: response.headers["content-type"] });
-    // const blob = new Blob([buffer]);
     const dataURL = URL.createObjectURL(blob);
     return dataURL;
   }

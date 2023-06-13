@@ -37,9 +37,7 @@ const Upload = () => {
           ref={fileInputRef}
           onChange={handleFileChange}
           className="input__file"
-          // accept="audio/*,video/*,image/*,.pdf,.doc,.docx,.xls,.xlsx"
           accept="*"
-          // multiple
         />
         {!files.length && (
           <button

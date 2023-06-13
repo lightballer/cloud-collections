@@ -33,11 +33,6 @@ const MyFiles = () => {
       });
   }, []);
 
-  const handleSaveClick = (id, filename) => {
-    const token = getToken();
-    updateFilename(token, id, filename).then(() => window.location.reload());
-  };
-
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center mt-4">
@@ -52,7 +47,7 @@ const MyFiles = () => {
     <div className="files-list_container">
       <div className="card-deck cards-container">
         {filesList.map((file) => (
-          <FileCard key={file.id} file={file} onSaveClick={handleSaveClick} />
+          <FileCard key={file.id} file={file}  />
         ))}
       </div>
     </div>

@@ -3,9 +3,9 @@ import "./FileCard.css";
 import useAuth from "useAuth";
 import FilePreview from "components/FilePreview/FilePreview";
 import Modal from "react-modal";
-import { deleteFile, getFilePreview } from "http/files";
+import { deleteFile, getFilePreview, updateFilename } from "http/files";
 
-const FileCard = ({ file, onSaveClick }) => {
+const FileCard = ({ file }) => {
   const { name, upload_date, dataUrl, id } = file;
 
   const fileName = name.substring(0, name.lastIndexOf("."));
@@ -33,8 +33,9 @@ const FileCard = ({ file, onSaveClick }) => {
 
   const handleSaveClick = () => {
     setIsEditing(false);
+    const token = getToken();
     const filename = `${editedName}.${fileExtension}`;
-    onSaveClick(id, filename);
+    updateFilename(token, id, filename).then(() => window.location.reload());
   };
 
   const handleDeleteClick = () => {
