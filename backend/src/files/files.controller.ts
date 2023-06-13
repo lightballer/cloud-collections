@@ -55,13 +55,10 @@ export class FilesController {
       const fileExtension = name.substring(name.lastIndexOf('.') + 1);
 
       const filePath = `./uploads/${filename}.${fileExtension}`;
-      console.log({ filePath });
       const writeStream = createWriteStream(filePath);
       writeStream.write(fileBuffer);
 
       writeStream.on('finish', async () => {
-        console.log(uploadDate);
-
         const fileSize = statSync(filePath).size;
         const savedFile = await this.filesService.create({
           name,
@@ -93,6 +90,15 @@ export class FilesController {
     return this.filesService.findAllUserFiles(sub);
   }
 
+  @Get(':id')
+  @UseGuards(CustomAuthGuard)
+  async findOne(@Param('id') id: string, @Req() request: Request) {
+    const token = request.headers.authorization.split('Bearer ')[1];
+    const { sub }: any = jwtDecode(token);
+
+    return this.filesService.findOne(+id, sub);
+  }
+
   private async getFileBuffer(path): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
       const chunks: Buffer[] = [];
@@ -111,15 +117,6 @@ export class FilesController {
         reject(error);
       });
     });
-  }
-
-  @Get(':id')
-  @UseGuards(CustomAuthGuard)
-  async findOne(@Param('id') id: string, @Req() request: Request) {
-    const token = request.headers.authorization.split('Bearer ')[1];
-    const { sub }: any = jwtDecode(token);
-
-    return this.filesService.findOne(+id, sub);
   }
 
   @Get(':id/raw')
@@ -144,13 +141,9 @@ export class FilesController {
 
     const path = `./uploads/${filename}.${fileExtension}`;
 
-    console.log({ path });
-
     const fileBuffer = await this.getFileBuffer(path);
 
     const mimeType = mime.lookup(path);
-
-    console.log({ mimeType, filename });
 
     res.setHeader('Content-Type', mimeType);
     res.setHeader(
@@ -176,8 +169,6 @@ export class FilesController {
       sub,
       updateFileDto,
     );
-
-    console.log({ updateResult });
 
     return;
   }
