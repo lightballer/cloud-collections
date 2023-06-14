@@ -28,16 +28,20 @@ const saveToken = (userId, token) => {
 
 const getToken = (userId) => {
   return new Promise((resolve, reject) => {
-    db.get("SELECT * FROM tokens WHERE userId = ?", userId.toString(), (err, row) => {
-      if (err) {
-        console.error(err);
-        reject(err);
+    db.get(
+      "SELECT * FROM tokens WHERE userId = ?",
+      userId.toString(),
+      (err, row) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        if (row) {
+          resolve(row?.token);
+        }
+        resolve(null);
       }
-      if (row) {
-        const { token } = row;
-        resolve(token);
-      }
-    });
+    );
   });
 };
 

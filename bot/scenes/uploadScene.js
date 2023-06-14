@@ -10,21 +10,23 @@ uploadScene.enter((ctx) => {
 });
 
 uploadScene.on("document", async (ctx) => {
-  const userId = ctx.from.id;
-  const token = await getToken(userId);
-  const file = ctx.message.document;
   try {
+    const userId = ctx.from.id;
+    const token = await getToken(userId);
+    const file = ctx.message.document;
+    if (!token) throw new Error("Unauthorized!");
     const fileLink = await ctx.telegram.getFileLink(file.file_id);
     const fileBuffer = await fetch(fileLink).then((res) => res.arrayBuffer());
     const uploadResult = await uploadFile(token, {
       ...file,
       content: fileBuffer,
     });
-    if (!uploadResult) return ctx.reply("Error while uploading file");
-    ctx.reply("File successfully uploaded! 👍");
+    if (!uploadResult) throw new Error("Error while uploading file");
+    await ctx.reply("File successfully uploaded! 👍");
   } catch (err) {
     console.error(err);
-    ctx.reply("Error while uploading file");
+    await ctx.reply(err.message || "Error while uploading file");
+    await ctx.scene.leave();
   }
 });
 

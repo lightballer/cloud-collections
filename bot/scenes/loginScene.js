@@ -11,14 +11,17 @@ loginScene.enter((ctx) => {
 
 loginScene.on("text", async (ctx) => {
   const input = ctx.message.text;
+  const id = ctx.message.message_id;
   if (!ctx.session.email) {
-    ctx.session.email = input;
+    ctx.session.email = { input, id };
     await ctx.reply("Please enter your password:");
+    ctx.session.prompts = [ctx.message.message_id];
   } else {
-    ctx.session.password = input;
+    ctx.session.password = { input, id };
   }
 
-  const { email, password } = ctx.session;
+  const email = ctx.session?.email?.input;
+  const password = ctx.session?.password?.input;
 
   if (!email || !password) return;
 
@@ -27,14 +30,18 @@ loginScene.on("text", async (ctx) => {
   if (token) {
     const userId = ctx.from.id;
     await deleteToken(userId);
-    await saveToken(userId, token); // save token to local db
+    await saveToken(userId, token);
     await ctx.reply("You are logged in!");
+    await ctx.deleteMessage(ctx.session.email.id);
+    await ctx.deleteMessage(ctx.session.password.id);
   } else {
+    await ctx.reply("Invalid email or password. Please try again. /login");
+    await ctx.deleteMessage(ctx.session.email.id);
+    await ctx.deleteMessage(ctx.session.password.id);
     ctx.session.email = undefined;
     ctx.session.password = undefined;
-    await ctx.reply("Invalid email or password. Please try again. /login");
   }
-  await ctx.scene.leave();
+  ctx.scene.leave();
 });
 
 module.exports = { loginScene };
