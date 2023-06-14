@@ -1,63 +1,11 @@
 const { Scenes } = require("telegraf");
 const { getToken } = require("../initDb");
 const COMMANDS = require("../commands");
-
-const getFilesList = async (token) => {
-  const response = await fetch(`http://${process.env.BACKEND_URL}/files`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (response.status === 200) {
-    return response.json();
-  }
-
-  return null;
-};
-
-const getRawFile = async (token, id) => {
-  const response = await fetch(
-    `http://${process.env.BACKEND_URL}/files/${id}/raw`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (response.status === 200) {
-    const headerValue = response.headers.get("content-disposition");
-    const filename = headerValue.substring(
-      headerValue.indexOf(`"`) + 1,
-      headerValue.lastIndexOf(`"`)
-    );
-    const arrayBuffer = await response.arrayBuffer();
-    return arrayBuffer;
-  }
-
-  return null;
-};
-
-const getFileInfo = async (token, id) => {
-  const response = await fetch(
-    `http://${process.env.BACKEND_URL}/files/${id}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (response.status === 200) {
-    return response.json();
-  }
-
-  return null;
-};
+const {
+  getFilesList,
+  getFileInfo,
+  getRawFile,
+} = require("../services/files.service");
 
 const downloadScene = new Scenes.BaseScene("download");
 
@@ -67,8 +15,9 @@ downloadScene.enter(async (ctx) => {
   if (!token) return ctx.reply("Unauthorized!");
   const files = await getFilesList(token);
   if (files) {
+    const fromByteToMb = (bytes) => Math.floor((bytes / 1_000_000) * 1000) / 1000;
     const filesToString = files
-      .map((file) => `${file.id} - ${file.name}`)
+      .map((file) => `${file.id} - ${file.name}, ${fromByteToMb(file.size)} mb`)
       .join("\n");
     await ctx.reply(`Send file id to get it:\n${filesToString}`);
   } else {

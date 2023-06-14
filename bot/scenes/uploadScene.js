@@ -1,26 +1,7 @@
 const { Scenes } = require("telegraf");
 
 const { getToken } = require("../initDb");
-
-const uploadFile = async (token, file) => {
-  const response = await fetch(
-    `http://${process.env.BACKEND_URL}/files/${file.file_name}`,
-    {
-      method: "POST",
-      body: file.content,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": file.mime_type,
-      },
-    }
-  );
-
-  if (response.status === 201) {
-    return response.json();
-  }
-
-  return null;
-};
+const { uploadFile } = require("../services/files.service");
 
 const uploadScene = new Scenes.BaseScene("upload");
 
