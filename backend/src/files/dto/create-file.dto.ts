@@ -7,5 +7,5 @@ export class CreateFileDto {
 
   upload_date: Date;
 
-  user_id: User;
+  user: User;
 }

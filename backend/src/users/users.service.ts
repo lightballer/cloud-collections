@@ -25,9 +25,7 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    const user: User | null = await this.userRepository.findOneBy({ id });
-    if (!user) return null;
-    return { id: user.id, email: user.email };
+    return this.userRepository.findOneBy({ id });    
   }
 
   findOneByEmail(email: string) {

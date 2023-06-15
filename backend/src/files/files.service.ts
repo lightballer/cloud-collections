@@ -16,38 +16,30 @@ export class FilesService {
   }
 
   async findAllUserFiles(userId) {
-    const files = await this.fileRepository
-      .createQueryBuilder('files')
-      .where('files.user_id = :userId', { userId })
-      .getMany();
-
-    return files;
+    return this.fileRepository.find({
+      where: {
+        user: { id: userId },
+      },
+    });
   }
 
-  findOne(id: number, userId: string) {
-    return this.fileRepository
-      .createQueryBuilder('files')
-      .where('files.user_id = :userId', { userId })
-      .where('files.id = :id', { id })
-      .getOne();
+  findOne(id: number, userId: number) {
+    return this.fileRepository.findOne({
+      where: {
+        id,
+        user: { id: userId },
+      },
+    });
   }
 
-  update(id: number, userId: string, updateFileDto: UpdateFileDto) {
-    return this.fileRepository
-      .createQueryBuilder('files')
-      .update()
-      .set({ ...updateFileDto })
-      .where('user_id = :userId', { userId })
-      .andWhere('id = :id', { id })
-      .execute();
+  update(id: number, userId: number, updateFileDto: UpdateFileDto) {
+    return this.fileRepository.update(
+      { id, user: { id: userId } },
+      { name: updateFileDto.name },
+    );
   }
 
-  remove(id: number, userId: string) {
-    return this.fileRepository
-      .createQueryBuilder('files')
-      .where('files.user_id = :userId', { userId })
-      .where('files.id = :id', { id })
-      .delete()
-      .execute();
+  remove(id: number, userId: number) {
+    return this.fileRepository.delete({ id, user: { id: userId } });
   }
 }

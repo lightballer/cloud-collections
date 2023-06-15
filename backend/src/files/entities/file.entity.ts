@@ -14,6 +14,6 @@ export class File {
   @Column({ type: 'timestamp' })
   upload_date: Date;
 
-  @ManyToOne(() => User, (user) => user.id)
-  user_id: User;
+  @ManyToOne(() => User, user => user.files)
+  user: User;
 }

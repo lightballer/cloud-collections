@@ -8,7 +8,9 @@ CREATE TABLE files (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     size BIGINT NOT NULL,
-    upload_date TIMESTAMP NOT NULL
+    upload_date TIMESTAMP NOT NULL,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-ALTER TABLE files ADD CONSTRAINT user_id FOREIGN KEY (id) REFERENCES users(id);
+-- ALTER TABLE files ADD CONSTRAINT user_id FOREIGN KEY (id) REFERENCES users(id);

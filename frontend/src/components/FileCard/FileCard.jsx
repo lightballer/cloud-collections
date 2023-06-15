@@ -57,8 +57,13 @@ const FileCard = ({ file }) => {
   const closeModal = () => setIsOpen(false);
 
   if (isOpen) {
+    console.log({ id });
     return (
-      <Modal isOpen={isOpen} onRequestClose={closeModal}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        appElement={document.getElementById("root")}
+      >
         <FilePreview id={id} name={name} />
       </Modal>
     );
@@ -107,7 +112,7 @@ const FileCard = ({ file }) => {
         </div>
       </div>
       <div className="card-footer">
-        <small className="text-muted">Last updated at: {date}</small>
+        <small className="text-muted">Uploaded at: {date}</small>
         {isEditing ? (
           <button onClick={handleSaveClick} className="btn btn-success mt-2">
             Save

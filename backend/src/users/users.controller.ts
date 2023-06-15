@@ -3,17 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Param,
   UseGuards,
   Req,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CustomAuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import jwt_decode from 'jwt-decode';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -31,16 +30,18 @@ export class UsersController {
       throw new BadRequestException('Error while creating new user');
     return {
       email: createdUser.email,
-      id: createdUser.id
+      id: createdUser.id,
     };
   }
 
   @Get()
   @UseGuards(CustomAuthGuard)
-  getUserInfo(@Req() request: Request) {
+  async getUserInfo(@Req() request: Request) {
     const token = request.headers.authorization.split('Bearer ')[1];
     const decoded: any = jwt_decode(token);
     const id = decoded.sub;
-    return this.usersService.findById(+id);
+    const user = await this.usersService.findById(+id);
+    if (!user) throw new NotFoundException();
+    return { id: user.id, email: user.email };
   }
 }

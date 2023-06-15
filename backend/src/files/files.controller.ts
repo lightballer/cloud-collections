@@ -23,6 +23,7 @@ import { CustomAuthGuard } from 'src/auth/auth.guard';
 import jwtDecode from 'jwt-decode';
 // import { fileTypeFromFile } from 'file-type';
 import * as mime from 'mime-types';
+import { UsersService } from 'src/users/users.service';
 
 export const FileBuffer = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -34,7 +35,10 @@ export const FileBuffer = createParamDecorator(
 
 @Controller('files')
 export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
+  constructor(
+    private readonly filesService: FilesService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post(':name')
   @UseGuards(CustomAuthGuard)
@@ -60,11 +64,14 @@ export class FilesController {
 
       writeStream.on('finish', async () => {
         const fileSize = statSync(filePath).size;
+        const userId = sub;
+        const user = await this.usersService.findById(userId);
+
         const savedFile = await this.filesService.create({
           name,
           size: BigInt(fileSize),
           upload_date: new Date(uploadDate),
-          user_id: sub,
+          user,
         });
 
         resolve(
@@ -126,9 +133,11 @@ export class FilesController {
     @Req() request: Request,
     @Res() res: Response,
   ) {
+    console.log({ id });
     const token = request.headers.authorization.split('Bearer ')[1];
     const { sub }: any = jwtDecode(token);
     const file = await this.filesService.findOne(+id, sub);
+    console.log({ file });
     if (!file) {
       throw new NotFoundException('File not found');
     }
@@ -139,9 +148,13 @@ export class FilesController {
 
     const filename = `${sub}-${new Date(upload_date).getTime()}`;
 
+    console.log({ filename });
+
     const path = `./uploads/${filename}.${fileExtension}`;
 
     const fileBuffer = await this.getFileBuffer(path);
+
+    console.log({ fileBuffer });
 
     const mimeType = mime.lookup(path);
 
