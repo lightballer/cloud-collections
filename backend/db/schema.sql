@@ -12,5 +12,3 @@ CREATE TABLE files (
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
--- ALTER TABLE files ADD CONSTRAINT user_id FOREIGN KEY (id) REFERENCES users(id);

@@ -7,9 +7,9 @@ import { upload } from "http/files";
 const Upload = () => {
   const { getToken } = useAuth();
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileList>([]);
 
-  const handleFileChange = useCallback((event) => {
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles) setFiles((oldFiles) => [...oldFiles, ...selectedFiles]);
   }, []);

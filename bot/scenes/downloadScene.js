@@ -9,7 +9,7 @@ const {
 
 const downloadScene = new Scenes.BaseScene("download");
 
-downloadScene.enter(async ctx => {
+downloadScene.enter(async (ctx) => {
   const userId = ctx.from.id;
   try {
     const token = await getToken(userId);
@@ -36,8 +36,11 @@ downloadScene.enter(async ctx => {
 
 downloadScene.on("text", async (ctx) => {
   const input = ctx.message.text;
+  console.log({ input, COMMANDS });
   try {
-    if (COMMANDS.includes[input]) return ctx.scene.leave();
+    if (COMMANDS.includes(input)) {
+      return ctx.scene.leave();
+    }
 
     const userId = ctx.from.id;
     const token = await getToken(userId);
@@ -52,6 +55,7 @@ downloadScene.on("text", async (ctx) => {
     }
     const buffer = Buffer.from(arrayBuffer);
     await ctx.replyWithDocument({ source: buffer, filename: name });
+    await ctx.scene.leave();
   } catch (err) {
     console.error(err);
     await ctx.reply(err.message || "Error while getting file");

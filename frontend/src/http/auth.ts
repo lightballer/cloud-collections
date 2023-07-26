@@ -1,6 +1,6 @@
 const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}`;
 
-const login = async (email, password) => {
+const login = async (email: string, password: string) => {
   const response = await fetch(`${baseUrl}/auth/login`, {
     method: "POST",
     headers: {
@@ -17,7 +17,7 @@ const login = async (email, password) => {
   return null;
 };
 
-const getUserInfo = async (token) => {
+const getUserInfo = async (token: string) => {
   const response = await fetch(`${baseUrl}/users`, {
     method: "GET",
     headers: {
@@ -33,7 +33,7 @@ const getUserInfo = async (token) => {
   return null;
 };
 
-const signUp = async (email, password) => {
+const signUp = async (email: string, password: string) => {
   const response = await fetch(`${baseUrl}/users/`, {
     method: "POST",
     headers: {

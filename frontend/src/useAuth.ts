@@ -1,12 +1,12 @@
 import { getUserInfo } from "http/auth";
 
 const useAuth = () => {
-  const getUser = async (token) => {
+  const getUser = async (token: string) => {
     const user = await getUserInfo(token);
     return user;
   };
 
-  const logout = () => {
+  const logout = (): boolean => {
     try {
       sessionStorage.removeItem("token");
       return true;
@@ -15,7 +15,7 @@ const useAuth = () => {
     }
   };
 
-  const saveToken = (token) => {
+  const saveToken = (token: string): boolean => {
     try {
       sessionStorage.setItem("token", token);
       return true;
@@ -24,8 +24,8 @@ const useAuth = () => {
     }
   };
 
-  const getToken = () => {
-    return sessionStorage.getItem("token");
+  const getToken = (): string => {
+    return sessionStorage.getItem("token") || "";
   };
 
   return { getUser, logout, saveToken, getToken };

@@ -1,6 +1,6 @@
 const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}`;
 
-const getFiles = async (token) => {
+const getFiles = async (token: string) => {
   const response = await fetch(`${baseUrl}/files`, {
     method: "GET",
     headers: {
@@ -16,7 +16,7 @@ const getFiles = async (token) => {
   return null;
 };
 
-const getFilePreview = async (token, id) => {
+const getFilePreview = async (token: string, id: string) => {
   const response = await fetch(`${baseUrl}/files/${id}/raw`, {
     method: "GET",
     headers: {
@@ -26,7 +26,9 @@ const getFilePreview = async (token, id) => {
 
   if (response.status === 200) {
     const buffer = await response.arrayBuffer();
-    const blob = new Blob([buffer], { type: response.headers["content-type"] });
+    const blob = new Blob([buffer], {
+      type: response.headers.get("content-type") || "",
+    });
     const dataURL = URL.createObjectURL(blob);
     return dataURL;
   }
@@ -34,24 +36,22 @@ const getFilePreview = async (token, id) => {
   return null;
 };
 
-const upload = (token, file) => {
+const upload = (token: string, file: File) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = async (event) => {
-      const fileContent = event.target.result;
+    reader.onload;
+    reader.onload = async (event: ProgressEvent<FileReader>) => {
+      const fileContent = event.target?.result;
 
       try {
-        const response = await fetch(
-          `http://${process.env.REACT_APP_BACKEND_URL}/files/${file.name}`,
-          {
-            method: "POST",
-            body: fileContent,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": file.type,
-            },
-          }
-        );
+        const response = await fetch(`${baseUrl}/files/${file.name}`, {
+          method: "POST",
+          body: fileContent,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": file.type,
+          },
+        });
 
         if (response.ok) {
           console.log("File sent successfully");
@@ -73,22 +73,19 @@ const upload = (token, file) => {
   });
 };
 
-const deleteFile = async (token, id) => {
-  const response = await fetch(
-    `http://${process.env.REACT_APP_BACKEND_URL}/files/${id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  ).then((data) => data.json());
+const deleteFile = async (token: string, id: string) => {
+  const response = await fetch(`${baseUrl}/files/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((data) => data.json());
 
   return response;
 };
 
-const updateFilename = async (token, id, filename) => {
-  fetch(`http://${process.env.REACT_APP_BACKEND_URL}/files/${id}`, {
+const updateFilename = async (token: string, id: string, filename: string) => {
+  fetch(`${baseUrl}/files/${id}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,

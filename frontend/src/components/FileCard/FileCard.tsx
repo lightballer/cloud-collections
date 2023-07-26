@@ -5,7 +5,18 @@ import FilePreview from "components/FilePreview/FilePreview";
 import Modal from "react-modal";
 import { deleteFile, getFilePreview, updateFilename } from "http/files";
 
-const FileCard = ({ file }) => {
+export interface IFile {
+  name: string;
+  upload_date: string;
+  dataUrl?: string;
+  id: string;
+}
+
+interface Props {
+  file: IFile;
+}
+
+const FileCard = ({ file }: Props) => {
   const { name, upload_date, dataUrl, id } = file;
 
   const fileName = name.substring(0, name.lastIndexOf("."));
@@ -18,6 +29,7 @@ const FileCard = ({ file }) => {
   const handleDownloadClick = () => {
     const token = getToken();
     getFilePreview(token, id).then((dataUrl) => {
+      if (!dataUrl) return;
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = name;
