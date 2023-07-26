@@ -7,24 +7,32 @@ import { upload } from "http/files";
 const Upload = () => {
   const { getToken } = useAuth();
 
-  const [files, setFiles] = useState<FileList>([]);
+  const [files, setFiles] = useState<FileList>();
 
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) setFiles((oldFiles) => [...oldFiles, ...selectedFiles]);
-  }, []);
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = event.target.files;
+      if (selectedFiles) setFiles(selectedFiles);
+    },
+    []
+  );
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectFileClick = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleUploadClick = async () => {
+    if (!files) return;
+
     const token = getToken();
     const file = files[0];
 
     upload(token, file).then((uploadResult) => {
+      console.log(uploadResult);
       window.location.reload();
     });
   };
@@ -39,7 +47,7 @@ const Upload = () => {
           className="input__file"
           accept="*"
         />
-        {!files.length && (
+        {!files && (
           <button
             type="button"
             className="input__file-button"
@@ -48,7 +56,7 @@ const Upload = () => {
             Select file
           </button>
         )}
-        {files.length > 0 && (
+        {files && (
           <button
             type="button"
             className="input__file-button"
@@ -58,13 +66,11 @@ const Upload = () => {
           </button>
         )}
       </form>
-      <ul className="list-group list-group-flush">
-        {files.map((file, i) => (
-          <li className="list-group-item list-group-item-fixed" key={i}>
-            {file?.name}
-          </li>
-        ))}
-      </ul>
+      <div className="list-group list-group-flush">
+        <div className="list-group-item list-group-item-fixed">
+          {files && files[0].name}
+        </div>
+      </div>
     </div>
   );
 };

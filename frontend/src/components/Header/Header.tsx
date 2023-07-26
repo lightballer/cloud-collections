@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 import { useStateValue } from "../../store/reducer";
-import React from "react";
 import useAuth from "useAuth";
 
 const Header = () => {

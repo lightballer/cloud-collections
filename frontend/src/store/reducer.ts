@@ -1,5 +1,4 @@
 import { createContext, useReducer, useContext } from "react";
-import { JsxElement } from "typescript";
 
 interface State {
   username: string;
@@ -40,11 +39,10 @@ const StateContext = createContext(initialState);
 
 export const StateProvider = ({
   children,
-}: StateProviderProps): StateContext.Provider => {
+}: StateProviderProps): React.FC<React.ReactNode> => {
   const value = useStateDispatch();
-  return (
-    <StateContext.Provider value={value}>{children}</StateContext.Provider>
-  );
+  return <StateContext.Provider value={value}>{children}</StateContext.Provider>
+  
 };
 
 export const useStateValue = () => useContext(StateContext);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./FileCard.css";
 import useAuth from "useAuth";
 import FilePreview from "components/FilePreview/FilePreview";
@@ -23,8 +23,8 @@ const FileCard = ({ file }: Props) => {
   const fileExtension = name.substring(name.lastIndexOf(".") + 1);
 
   const { getToken } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(fileName);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editedName, setEditedName] = useState<string>(fileName);
 
   const handleDownloadClick = () => {
     const token = getToken();

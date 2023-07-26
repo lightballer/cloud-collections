@@ -1,15 +1,21 @@
-import React from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import useAuth from "useAuth";
 
-const FilePreview = ({ id, name }) => {
+interface Props {
+  id: string;
+  name: string;
+}
+
+const FilePreview = ({ id, name }: Props) => {
   const { getToken } = useAuth();
+  
+  const rawFileUrl = getRawFileUrl(id);
 
   return (
     <DocViewer
       documents={[
         {
-          uri: `http://${process.env.REACT_APP_BACKEND_URL}/files/${id}/raw`,
+          uri: rawFileUrl,
           fileName: name,
         },
       ]}
@@ -18,6 +24,12 @@ const FilePreview = ({ id, name }) => {
       pluginRenderers={DocViewerRenderers}
     />
   );
+};
+
+const getRawFileUrl = (id: string) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  if (!backendUrl) throw new Error("Backend url is not set");
+  return `http://${backendUrl}/files/${id}/raw`;
 };
 
 export default FilePreview;

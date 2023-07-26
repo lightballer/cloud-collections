@@ -8,10 +8,10 @@ const SignUp = () => {
   const { state } = useStateValue();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatedPassword, setRepeatedPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [repeatedPassword, setRepeatedPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const passwordsMatch = useMemo(
     () => password === repeatedPassword,
@@ -24,19 +24,19 @@ const SignUp = () => {
     else setErrorMessage("");
   }, [password, passwordsMatch, repeatedPassword]);
 
-  const handleEmailChange = (event) => {
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 
-  const handleRepeatedPasswordChange = (event) => {
+  const handleRepeatedPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRepeatedPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (passwordsMatch) {
       signUp(email, password).then((user) => {

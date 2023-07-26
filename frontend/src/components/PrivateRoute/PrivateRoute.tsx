@@ -1,11 +1,14 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 
 import { useStateValue } from "../../store/reducer";
 
-const PrivateRoute = ({ redirectPath, children }) => {
-  const { state } = useStateValue();
+interface Props {
+  redirectPath: string;
+  children: JSX.Element;
+}
 
+const PrivateRoute = ({ redirectPath, children }: Props) => {
+  const { state } = useStateValue();
   if (!state.username) {
     return <Navigate to={redirectPath} replace />;
   }

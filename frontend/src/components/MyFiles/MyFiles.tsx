@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./MyFiles.css";
-import { getFilePreview, getFiles, updateFilename } from "../../http/files";
+import { getFilePreview, getFiles } from "../../http/files";
 import FileCard from "../FileCard";
 import useAuth from "useAuth";
+import { IFile } from "../FileCard/FileCard";
 
 const MyFiles = () => {
   const { getToken } = useAuth();
 
-  const [filesList, setFilesList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [filesList, setFilesList] = useState<IFile[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const token = getToken();
