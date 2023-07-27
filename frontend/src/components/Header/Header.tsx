@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 
-import { useStateValue } from "../../store/reducer";
+import { username } from "store/username";
+import { observer } from "mobx-react-lite";
+
 import useAuth from "useAuth";
 
-const Header = () => {
-  const { state, dispatch } = useStateValue();
+const Header = observer(() => {
   const { logout } = useAuth();
 
   const handleLogoutClick = () => {
     const logoutResult = logout();
-    if (logoutResult) dispatch({ type: "username", payload: "" });
+    if (logoutResult) username.setUsername("");
   };
 
-  if (!state.username) {
+  if (!username.username) {
     return (
       <header>
         <div className="btn-center">
@@ -43,6 +44,6 @@ const Header = () => {
       </div>
     </header>
   );
-};
+});
 
 export default Header;

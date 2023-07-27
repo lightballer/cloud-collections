@@ -1,19 +1,19 @@
 import { Navigate } from "react-router-dom";
 
-import { useStateValue } from "../../store/reducer";
+import { username } from "store/username";
+import { observer } from "mobx-react-lite";
 
 interface Props {
   redirectPath: string;
   children: JSX.Element;
 }
 
-const PrivateRoute = ({ redirectPath, children }: Props) => {
-  const { state } = useStateValue();
-  if (!state.username) {
+const PrivateRoute = observer(({ redirectPath, children }: Props) => {
+  if (!username.username) {
     return <Navigate to={redirectPath} replace />;
   }
 
   return children;
-};
+});
 
 export default PrivateRoute;

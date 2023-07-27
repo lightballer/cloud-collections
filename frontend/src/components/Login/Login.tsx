@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
-import { useStateValue } from "../../store/reducer";
+import { username } from "store/username";
+import { observer } from "mobx-react-lite";
 import { login } from "http/auth";
 import useAuth from "useAuth";
 
-const Login = () => {
-  const { state, dispatch } = useStateValue();
+const Login = observer(() => {
   const { saveToken } = useAuth();
 
   const [email, setEmail] = useState<string>("");
@@ -26,12 +26,12 @@ const Login = () => {
     login(email, password).then((token) => {
       if (token) {
         const saveResult = saveToken(token);
-        if (saveResult) dispatch({ type: "username", payload: email });
+        if (saveResult) username.setUsername(email);
       }
     });
   };
 
-  if (state.username) return <Navigate to={"/myfiles"} replace />;
+  if (username.username) return <Navigate to={"/myfiles"} replace />;
 
   return (
     <div className="container mt-5">
@@ -90,6 +90,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Login;

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useStateValue } from "../../store/reducer";
+import { username } from "store/username";
+import { observer } from "mobx-react-lite";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import React from "react";
 import { signUp } from "http/auth";
 
-const SignUp = () => {
-  const { state } = useStateValue();
+const SignUp = observer(() => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>("");
@@ -32,7 +32,9 @@ const SignUp = () => {
     setPassword(event.target.value);
   };
 
-  const handleRepeatedPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRepeatedPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRepeatedPassword(event.target.value);
   };
 
@@ -49,7 +51,7 @@ const SignUp = () => {
     }
   };
 
-  if (state.username) return <Navigate to={"/myfiles"} replace />;
+  if (username.username) return <Navigate to={"/myfiles"} replace />;
 
   return (
     <div className="container mt-5">
@@ -126,6 +128,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-};
+});
 
 export default SignUp;

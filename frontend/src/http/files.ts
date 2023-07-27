@@ -39,7 +39,6 @@ const getFilePreview = async (token: string, id: string) => {
 const upload = (token: string, file: File) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload;
     reader.onload = async (event: ProgressEvent<FileReader>) => {
       const fileContent = event.target?.result;
 
