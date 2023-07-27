@@ -66,11 +66,13 @@ const Upload = () => {
           </button>
         )}
       </form>
-      <div className="list-group list-group-flush">
-        <div className="list-group-item list-group-item-fixed">
-          {files && files[0].name}
+      {files && (
+        <div className="list-group list-group-flush">
+          <div className="list-group-item list-group-item-fixed">
+            {files[0].name}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

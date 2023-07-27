@@ -74,7 +74,6 @@ const FileCard = ({ file }: Props) => {
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
-        // appElement={document.getElementById("root")}
       >
         <FilePreview id={id} name={name} />
       </Modal>
