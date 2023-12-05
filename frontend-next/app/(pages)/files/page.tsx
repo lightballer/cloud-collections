@@ -1,4 +1,9 @@
+"use client";
+
+import { getFiles } from "@/app/lib/http/files";
 import FileCard from "@/app/ui/files/FileCard";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface IFile {
   name: string;
@@ -8,10 +13,19 @@ interface IFile {
 }
 
 export default function Page() {
-  const isLoading = false;
-  const filesList: IFile[] = [
-    { name: "test.jpg", upload_date: "2023-11-30", id: "1" },
-  ];
+  const [isLoading, setIsLoading] = useState(false);
+  const session = useSession();
+
+  const [filesList, setFilesList] = useState<IFile[]>([]);
+
+  useEffect(() => {
+    if (session?.data?.user?.access_token) {
+      getFiles(session.data.user.access_token).then((files) => {
+        setFilesList(files);
+        setIsLoading(false);
+      });
+    }
+  }, [session]);
 
   if (isLoading) {
     return (

@@ -1,3 +1,5 @@
+'use client';
+
 import { getUserInfo } from "@/app/lib/http/auth";
 
 const useAuth = () => {

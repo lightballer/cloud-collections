@@ -1,22 +1,11 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-
-import { redirect } from "next/navigation";
-
-// import { username } from "store/username";
-import { login } from "@/app/lib/http/auth";
+import { authenticate } from "@/app/lib/actions";
 import Link from "next/link";
-import useAuth from "@/app/lib/hooks/useAuth";
-import { UserContext } from "@/app/lib/context/context";
 
 export default function Page() {
-  const { username, setUsername } = useContext(UserContext);
-  const { saveToken } = useAuth();
-
-  if (username) redirect('/files');
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -28,17 +17,10 @@ export default function Page() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    login(email, password).then((token) => {
-      if (token) {
-        const saveResult = saveToken(token);
-        if (saveResult) setUsername(email);
-      }
-    });
+    await authenticate(email, password);
   };
-
-  // if (username.username) replace("/files");
 
   return (
     <div className="container mt-5">
@@ -88,7 +70,8 @@ export default function Page() {
               </form>
               <div className="text-center">
                 <p>
-                  Don&apos;t have an account? <Link href="/register">Sign up</Link>
+                  Don&apos;t have an account?{" "}
+                  <Link href="/register">Sign up</Link>
                 </p>
               </div>
             </div>

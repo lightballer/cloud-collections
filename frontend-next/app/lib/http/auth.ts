@@ -1,7 +1,4 @@
-'use server';
-
-const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}`;
-console.log({ REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL });
+const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 const login = async (email: string, password: string) => {
   const response = await fetch(`${baseUrl}/auth/login`, {
@@ -13,8 +10,9 @@ const login = async (email: string, password: string) => {
   });
 
   if (response.status === 201) {
-    const { access_token } = await response.json();
-    return access_token;
+    const responseJSON = await response.json();
+    console.log({ responseJSON });
+    return responseJSON;
   }
 
   return null;

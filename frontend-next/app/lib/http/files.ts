@@ -1,4 +1,6 @@
-const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}`;
+"use client";
+
+const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 const getFiles = async (token: string) => {
   const response = await fetch(`${baseUrl}/files`, {

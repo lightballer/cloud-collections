@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import "bootstrap/dist/css/bootstrap.css";
+import {signOut} from "next-auth/react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const handleLogoutClick = () => {};
+  const handleLogoutClick = async () => {
+    await signOut();
+  };
 
   return (
     <>
