@@ -1,8 +1,8 @@
-"use client";
+import { IFile } from "@/app/ui/files/FileCard";
 
 const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
-const getFiles = async (token: string) => {
+const getFiles = async (token: string): Promise<IFile[] | null> => {
   const response = await fetch(`${baseUrl}/files`, {
     method: "GET",
     headers: {
@@ -11,7 +11,7 @@ const getFiles = async (token: string) => {
   });
 
   if (response.status === 200) {
-    const files = await response.json();
+    const files: IFile[] = await response.json();
     return files;
   }
 

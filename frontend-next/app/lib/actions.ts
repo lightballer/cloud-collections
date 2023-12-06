@@ -1,22 +1,19 @@
 import { signIn } from "next-auth/react";
-// import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const authenticate = async (email: string, password: string) => {
   try {
-    // const formData = new FormData();
-    // formData.set("email", email);
-    // formData.set("password", password);
-    // console.log({ formData });
-    await signIn("credentials", { email, password });
+    const result = await signIn("credentials", { email, password });
+    // console.log({ result });
+    // if (result?.error) {
+    //   throw result.error;
+    // } else {
+    //   redirect("/");
+    // }
   } catch (error) {
     console.log({ error });
     if (error instanceof Error) {
-    //   switch (error.type) {
-    //     case "CredentialsSignin":
-    //       return "Invalid credentials.";
-    //     default:
-          return "Something went wrong.";
-    //   }
+      return "Something went wrong.";
     }
     throw error;
   }

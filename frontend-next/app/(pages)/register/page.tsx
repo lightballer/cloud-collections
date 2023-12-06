@@ -1,5 +1,6 @@
 "use client";
 
+import "bootstrap/dist/css/bootstrap.css";
 import { useContext, useEffect, useMemo, useState } from "react";
 import React from "react";
 import { signUp } from "@/app/lib/http/auth";
