@@ -12,9 +12,9 @@ export interface IFile {
 
 export default async function Page() {
   const session: Session | null = await getServerSession(authOptions);
-  console.log({ session });
+  // console.log({ session });
   const filesList = (await getFiles(session?.user?.access_token || "")) || [];
-  console.log({ filesList });
+  // console.log({ filesList });
 
   return (
     <div className="files-list_container">

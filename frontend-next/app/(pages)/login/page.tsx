@@ -1,26 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { authenticate } from "@/app/lib/actions";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const session = useSession();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
+  useEffect(() => {
+    if (session?.data?.user?.access_token) {
+      redirect("/files");
+    } else if (!session.data?.user) {
+      setIsLoading(false);
+    }
+  }, [session.data?.user, session.data?.user?.access_token]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const email = event.currentTarget.email.value;
+    const password = event.currentTarget.password.value;
     await authenticate(email, password);
   };
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <div className="container mt-5">
@@ -39,10 +47,9 @@ export default function Page() {
                   <div className="col-sm-10">
                     <input
                       type="email"
+                      name="email"
                       className="form-control"
                       id="email"
-                      value={email}
-                      onChange={handleEmailChange}
                       required
                     />
                   </div>
@@ -54,10 +61,9 @@ export default function Page() {
                   <div className="col-sm-10">
                     <input
                       type="password"
+                      name="password"
                       className="form-control"
                       id="password"
-                      value={password}
-                      onChange={handlePasswordChange}
                       required
                     />
                   </div>

@@ -36,22 +36,58 @@
 // };
 
 // middleware.ts
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
-export async function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-  const protectedPaths = ["/", "/files"];
-  const isPathProtected = protectedPaths?.some((path) => pathname == path);
-  const res = NextResponse.next();
-  console.log({ res, isPathProtected });
-  if (isPathProtected) {
-    const token = await getToken({ req });
-    console.log({ token });
-    if (!token) {
-      const url = new URL(`/login`, req.url);
-      url.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(url);
-    }
+
+// import { withAuth } from "next-auth/middleware";
+
+// export default withAuth(
+//   function middleware(req) {
+//     console.log(req.nextauth.token);
+//   },
+//   {
+//     callbacks: {
+//       authorized: ({ token, req }) => {
+//         console.log({ token, req });
+//         return !!token;
+//       },
+//     },
+//   }
+// );
+
+// export const config = { matcher: ["/files"] };
+
+import { withAuth } from "next-auth/middleware";
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
+
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req, token) {},
+  {
+    callbacks: {
+      authorized: (params) => {
+        // console.log({ params });
+        const { token } = params;
+        const isLoggedIn = !!token;
+        const isOnFiles = params.req.nextUrl.pathname.startsWith("/files");
+        if (isOnFiles) {
+          return isLoggedIn; // Redirect unauthenticated users to login page
+        } else if (isLoggedIn) {
+          console.log("logged in but not on files");
+          const response = NextResponse.redirect(
+            `${params.req.nextUrl.origin}/files`
+          );
+          console.log({ response });
+          // window.location.replace('/files');
+          // redirect('/files');
+          return true;
+        }
+        return true;
+      },
+    },
   }
-  return res;
-}
+);
+
+export const config = {
+  // matcher: ["/files"]
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
