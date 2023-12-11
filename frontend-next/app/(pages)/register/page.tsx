@@ -1,60 +1,26 @@
 "use client";
 
 import "bootstrap/dist/css/bootstrap.css";
-import { useContext, useEffect, useMemo, useState } from "react";
 import React from "react";
-import { signUp } from "@/app/lib/http/auth";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { UserContext } from "@/app/lib/context/context";
+import { register } from "@/app/lib/actions";
+import { useFormState, useFormStatus } from "react-dom";
+import useCheckAuthentication from "@/app/lib/hooks/useCheckAuthentication";
 
 export default function Page() {
-  const { username } = useContext(UserContext);
+  const { isLoading } = useCheckAuthentication("/files");
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [repeatedPassword, setRepeatedPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, dispatch] = useFormState(register, undefined);
 
-  const passwordsMatch = useMemo(
-    () => password === repeatedPassword,
-    [password, repeatedPassword]
-  );
+  const { pending } = useFormStatus();
 
-  useEffect(() => {
-    if (password !== repeatedPassword)
-      setErrorMessage("Passwords are not matching");
-    else setErrorMessage("");
-  }, [password, passwordsMatch, repeatedPassword]);
+  if (pending) {
+    return <div>Loading...</div>;
+  }
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleRepeatedPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRepeatedPassword(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (passwordsMatch) {
-      signUp(email, password).then((user) => {
-        if (user) {
-          redirect("/login");
-        } else {
-          setErrorMessage("User with such email already exists");
-        }
-      });
-    }
-  };
-
-  if (username) redirect("/files");
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <div className="container mt-5">
@@ -65,7 +31,7 @@ export default function Page() {
               <h3 className="card-title">Sign up</h3>
             </div>
             <div className="card-body">
-              <form onSubmit={handleSubmit}>
+              <form action={dispatch}>
                 <div className="row mb-3">
                   <label htmlFor="email" className="col-sm-2 col-form-label">
                     Email
@@ -73,10 +39,9 @@ export default function Page() {
                   <div className="col-sm-10">
                     <input
                       type="email"
+                      name="email"
                       className="form-control"
                       id="email"
-                      value={email}
-                      onChange={handleEmailChange}
                       required
                     />
                   </div>
@@ -88,10 +53,9 @@ export default function Page() {
                   <div className="col-sm-10">
                     <input
                       type="password"
+                      name="password"
                       className="form-control"
                       id="password"
-                      value={password}
-                      onChange={handlePasswordChange}
                       required
                     />
                   </div>
@@ -103,14 +67,13 @@ export default function Page() {
                   <div className="col-sm-10">
                     <input
                       type="password"
+                      name="password_repeated"
                       className="form-control"
                       id="repeated-password"
-                      value={repeatedPassword}
-                      onChange={handleRepeatedPasswordChange}
                       required
                     />
                   </div>
-                  {(!passwordsMatch || errorMessage) && (
+                  {errorMessage && (
                     <div className="help-block text-danger">{errorMessage}</div>
                   )}
                 </div>

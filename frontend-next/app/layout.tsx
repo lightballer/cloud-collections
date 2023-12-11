@@ -10,7 +10,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <UserProvider>
         <CustomSessionProvider>
           <body>
             <div
@@ -21,7 +20,6 @@ export default function RootLayout({
             </div>
           </body>
         </CustomSessionProvider>
-      </UserProvider>
     </html>
   );
 }

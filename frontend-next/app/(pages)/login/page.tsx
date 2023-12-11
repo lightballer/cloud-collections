@@ -1,30 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { authenticate } from "@/app/lib/actions";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useFormState } from "react-dom";
+import useCheckAuthentication from "@/app/lib/hooks/useCheckAuthentication";
 
 export default function Page() {
-  const session = useSession();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isLoading } = useCheckAuthentication("/files");
 
-  useEffect(() => {
-    if (session?.data?.user?.access_token) {
-      redirect("/files");
-    } else if (!session.data?.user) {
-      setIsLoading(false);
-    }
-  }, [session.data?.user, session.data?.user?.access_token]);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const email = event.currentTarget.email.value;
-    const password = event.currentTarget.password.value;
-    await authenticate(email, password);
-  };
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
   if (isLoading) {
     return <div>Loading</div>;
@@ -39,7 +25,7 @@ export default function Page() {
               <h3 className="card-title">Login</h3>
             </div>
             <div className="card-body">
-              <form onSubmit={handleSubmit}>
+              <form action={dispatch}>
                 <div className="row mb-3">
                   <label htmlFor="email" className="col-sm-2 col-form-label">
                     Email
@@ -67,6 +53,9 @@ export default function Page() {
                       required
                     />
                   </div>
+                  {errorMessage && (
+                    <div className="help-block text-danger">{errorMessage}</div>
+                  )}
                 </div>
                 <div className="d-grid gap-2">
                   <button type="submit" className="btn btn-primary btn-sm">

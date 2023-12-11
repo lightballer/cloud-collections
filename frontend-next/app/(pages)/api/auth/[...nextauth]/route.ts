@@ -2,7 +2,6 @@ import { login } from "@/app/lib/http/auth";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import {redirect as redirectToPage} from "next/navigation";
 
 export const authOptions = {
   providers: [
@@ -41,13 +40,7 @@ export const authOptions = {
     session: (({ session, token }: any) => {
       session.user = token as any;
       return session;
-    }) as any,
-    // async redirect({ url, baseUrl }) {
-    //   console.log('url', url);
-    //   console.log('baseUrl', baseUrl);
-    //   redirectToPage('/files');
-    //   return url;
-    // }
+    }) as any
   },
   pages: {
     signIn: "/login",
