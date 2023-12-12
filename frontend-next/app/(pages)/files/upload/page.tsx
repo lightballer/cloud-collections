@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
+import { upload } from "@/app/lib/http/files";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useState, useRef } from "react";
 
-// import useAuth from "useAuth";
-// import { upload } from "http/files";
-
 export default function Page() {
-//   const { getToken } = useAuth();
+  const session = useSession();
 
   const [files, setFiles] = useState<FileList>();
+  const router = useRouter();
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,15 +28,18 @@ export default function Page() {
   };
 
   const handleUploadClick = async () => {
-    // if (!files) return;
+    console.log("upload click");
+    if (!files) return;
+    const token = session?.data?.user.access_token || "";
+    const file = files[0];
 
-    // const token = getToken();
-    // const file = files[0];
-
-    // upload(token, file).then((uploadResult) => {
-    //   console.log(uploadResult);
-    //   window.location.reload();
-    // });
+    try {
+      const uploadResult = await upload(token, file);
+      console.log(uploadResult);
+    } catch (err) {
+      console.log(err);
+    }
+    router.push("/files");
   };
 
   return (
@@ -76,4 +80,4 @@ export default function Page() {
       )}
     </div>
   );
-};
+}

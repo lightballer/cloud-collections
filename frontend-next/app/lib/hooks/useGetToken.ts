@@ -1,15 +1,10 @@
+import { useSession } from "next-auth/react";
 
-import { useState } from "react";
-import { auth } from "@/auth";
+const useGetToken = () => {
+  const session = useSession();
+  const token = session?.data?.user?.access_token || "";
 
-export function useGetToken() {
-//   const [token, setToken] = useState("");
+  return { token };
+};
 
-  auth((req) => {
-    console.log({ req });
-    console.log(req.cookies);
-    // setToken(req.cookies);
-  });
-  const token = "";
-  return token;
-}
+export default useGetToken;

@@ -1,11 +1,10 @@
-// 'use client';
-
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const useCheckAuthentication = (redirectPath: string) => {
   const session = useSession();
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,4 +18,4 @@ const useCheckAuthentication = (redirectPath: string) => {
   return { isLoading };
 };
 
-export default useCheckAuthentication
+export default useCheckAuthentication;

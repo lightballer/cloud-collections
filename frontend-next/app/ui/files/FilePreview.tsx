@@ -1,5 +1,7 @@
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-// import useAuth from "useAuth";
+import useGetToken from "@/app/lib/hooks/useGetToken";
+import { getFilePreview } from "@/app/lib/http/files";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Props {
   id: string;
@@ -7,29 +9,28 @@ interface Props {
 }
 
 const FilePreview = ({ id, name }: Props) => {
-//   const { getToken } = useAuth();
-  
-  const rawFileUrl = getRawFileUrl(id);
+  const { token } = useGetToken();
+
+  const [fileUrl, setFileUrl] = useState<string>("");
+
+  useEffect(() => {
+    getFilePreview(token, id).then((dataUrl) => {
+      setFileUrl(dataUrl || "");
+    });
+  }, []);
 
   return (
-    <DocViewer
-      documents={[
-        {
-          uri: rawFileUrl,
-          fileName: name,
-        },
-      ]}
-      prefetchMethod="GET"
-    //   requestHeaders={{ Authorization: `Bearer ${getToken()}` }}
-      pluginRenderers={DocViewerRenderers}
-    />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%"
+      }}
+    >
+      <Image src={fileUrl} alt={name} width={500} height={500} />
+    </div>
   );
-};
-
-const getRawFileUrl = (id: string) => {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
-  if (!backendUrl) throw new Error("Backend url is not set");
-  return `http://${backendUrl}/files/${id}/raw`;
 };
 
 export default FilePreview;

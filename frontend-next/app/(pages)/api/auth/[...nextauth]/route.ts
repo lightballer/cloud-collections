@@ -1,5 +1,5 @@
 import { login } from "@/app/lib/http/auth";
-import NextAuth from "next-auth";
+import NextAuth, { SessionStrategy } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 
@@ -41,6 +41,13 @@ export const authOptions = {
       session.user = token as any;
       return session;
     }) as any
+  },
+  session: {
+    strategy: "jwt" as SessionStrategy,
+    maxAge: 60 * 60,
+  },
+  jwt: {
+    maxAge: 60 * 60
   },
   pages: {
     signIn: "/login",

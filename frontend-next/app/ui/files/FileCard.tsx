@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import { useState } from "react";
-// import useAuth from "useAuth";
-// import FilePreview from "@/app/ui/myfiles/FilePreview";
+import useGetToken from "@/app/lib/hooks/useGetToken";
+import {
+  deleteFile,
+  getFilePreview,
+  updateFilename,
+} from "@/app/lib/http/files";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
-// import { deleteFile, getFilePreview, updateFilename } from "http/files";
+import FilePreview from "./FilePreview";
 
 export interface IFile {
   name: string;
   upload_date: string;
-  dataUrl?: string;
+  dataUrl?: string | null;
   id: string;
 }
 
@@ -18,26 +24,39 @@ interface Props {
 }
 
 const FileCard = ({ file }: Props) => {
-  const { name, upload_date, dataUrl, id } = file;
+  const router = useRouter();
+
+  const { token } = useGetToken();
+
+  const { name, upload_date, id } = file;
+
+  const [dataUrl, setDataUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (token) {
+      getFilePreview(token, id).then((dataUrl: string | null) => {
+        if (dataUrl) setDataUrl(dataUrl);
+      });
+    }
+  }, [id, token]);
 
   const fileName = name.substring(0, name.lastIndexOf("."));
   const fileExtension = name.substring(name.lastIndexOf(".") + 1);
 
-//   const { getToken } = useAuth();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedName, setEditedName] = useState<string>(fileName);
 
   const handleDownloadClick = () => {
-    // const token = getToken();
-    // getFilePreview(token, id).then((dataUrl) => {
-    //   if (!dataUrl) return;
-    //   const link = document.createElement("a");
-    //   link.href = dataUrl;
-    //   link.download = name;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // });
+    getFilePreview(token, id).then((dataUrl) => {
+      console.log({ dataUrl });
+      if (!dataUrl) return;
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
   };
 
   const handleEditClick = () => {
@@ -45,18 +64,16 @@ const FileCard = ({ file }: Props) => {
   };
 
   const handleSaveClick = () => {
-    // setIsEditing(false);
-    // const token = getToken();
-    // const filename = `${editedName}.${fileExtension}`;
-    // updateFilename(token, id, filename).then(() => window.location.reload());
+    setIsEditing(false);
+    const filename = `${editedName}.${fileExtension}`;
+    updateFilename(token, id, filename).then(() => router.refresh());
   };
 
   const handleDeleteClick = () => {
-    // const token = getToken();
-
-    // deleteFile(token, id).then(() => {
-    //   window.location.reload();
-    // });
+    deleteFile(token, id).then((deleteResult) => {
+      console.log({ deleteResult });
+      router.refresh();
+    });
   };
 
   const date = upload_date ? upload_date.split("T")[0] : "";
@@ -76,7 +93,7 @@ const FileCard = ({ file }: Props) => {
         isOpen={isOpen}
         onRequestClose={closeModal}
       >
-        {/* <FilePreview id={id} name={name} /> */}
+        <FilePreview id={id} name={name} />
       </Modal>
     );
   }
@@ -85,7 +102,13 @@ const FileCard = ({ file }: Props) => {
   return (
     <div className="card mx-3 smaller-card">
       {dataUrl ? (
-        <img className="card-img-top" src={dataUrl} alt="file" />
+        <Image
+          className="card-img-top"
+          src={dataUrl}
+          height={50}
+          width={50}
+          alt="file"
+        />
       ) : (
         <div
           className="card-img-top"

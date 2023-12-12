@@ -1,5 +1,4 @@
 import "./globals.css";
-import { UserProvider } from "@/app/lib/context/context";
 import { CustomSessionProvider } from "@/app/session-provider";
 
 
