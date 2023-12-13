@@ -1,4 +1,4 @@
-import { IFile } from "@/app/ui/files/FileCard";
+import { IFile } from "@/types/IFile";
 
 const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 

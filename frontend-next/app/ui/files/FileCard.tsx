@@ -10,14 +10,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import FilePreview from "./FilePreview";
-
-export interface IFile {
-  name: string;
-  upload_date: string;
-  dataUrl?: string | null;
-  id: string;
-}
+import FilePreview from "@/app/ui/files/FilePreview";
+import { IFile } from "@/types/IFile";
+import { parseFileName } from "@/app/ui/files/parseFileName";
 
 interface Props {
   file: IFile;
@@ -29,6 +24,8 @@ const FileCard = ({ file }: Props) => {
   const { token } = useGetToken();
 
   const { name, upload_date, id } = file;
+
+  const { extension, isImage } = parseFileName(name);
 
   const [dataUrl, setDataUrl] = useState<string>("");
 
@@ -89,19 +86,15 @@ const FileCard = ({ file }: Props) => {
   if (isOpen) {
     console.log({ id });
     return (
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={closeModal}
-      >
+      <Modal isOpen={isOpen} onRequestClose={closeModal}>
         <FilePreview id={id} name={name} />
       </Modal>
     );
   }
-  const extension = file.name.substring(file.name.lastIndexOf(".") + 1);
 
   return (
     <div className="card mx-3 smaller-card">
-      {dataUrl ? (
+      {isImage ? (
         <Image
           className="card-img-top"
           src={dataUrl}

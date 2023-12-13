@@ -1,7 +1,12 @@
+"use client";
+
 import useGetToken from "@/app/lib/hooks/useGetToken";
 import { getFilePreview } from "@/app/lib/http/files";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import PDFViewer from "./PDFViewer";
+import { parseFileName } from "@/app/ui/files/parseFileName";
 
 interface Props {
   id: string;
@@ -11,11 +16,15 @@ interface Props {
 const FilePreview = ({ id, name }: Props) => {
   const { token } = useGetToken();
 
+  const { extension, isImage } = parseFileName(name);
+
+  console.log({ extension });
+
   const [fileUrl, setFileUrl] = useState<string>("");
 
   useEffect(() => {
     getFilePreview(token, id).then((dataUrl) => {
-      setFileUrl(dataUrl || "");
+      if (dataUrl) setFileUrl(dataUrl);
     });
   }, []);
 
@@ -24,11 +33,11 @@ const FilePreview = ({ id, name }: Props) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
-        height: "100%"
+        height: "100%",
       }}
     >
-      <Image src={fileUrl} alt={name} width={500} height={500} />
+      {isImage && <Image src={fileUrl} alt={name} width={500} height={500} />}
+      {extension === "pdf" && <PDFViewer fileUrl={fileUrl} />}
     </div>
   );
 };
