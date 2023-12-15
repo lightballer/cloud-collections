@@ -44,18 +44,18 @@ const UploadFile = () => {
 
   return (
     <>
-      <form onSubmit={handleUploadClick} className="input__wrapper">
+      <form onSubmit={handleUploadClick} className="p-5">
         <input
           type="file"
           ref={fileInputRef}
           onChange={handleFileChange}
-          className="input__file"
+          className="input__file text-3xl"
           accept="*"
         />
         {!files && (
           <button
             type="button"
-            className="input__file-button"
+            className="options-btn text-3xl !w-max"
             onClick={handleSelectFileClick}
           >
             Select file
@@ -64,7 +64,7 @@ const UploadFile = () => {
         {files && (
           <button
             type="button"
-            className="input__file-button"
+            className="options-btn text-3xl !w-max"
             onClick={handleUploadClick}
           >
             Upload

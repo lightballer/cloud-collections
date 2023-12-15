@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+.nav-bar-item {
+  @apply bg-black text-amber-100 text-2xl rounded-md py-2 px-4;
+}
+
+.options-btn {
+  @apply p-2 border-2 border-black rounded-3xl w-24 text-center
+}
+
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -18,17 +26,15 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  /* background: linear-gradient(
+  background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb)); */
+    rgb(var(--background-start-rgb)); 
 }
 
-
-.gray-bg {
-  /* background-color: #35383c; */
+/* .gray-bg {
   background-color: whitesmoke;
 }
 
@@ -138,8 +144,14 @@ main {
 }
 
 .list-group-item-fixed {
-  width: 400px; /* Adjust the height as desired */
+  width: 400px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+} */
+
+.input__file {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
 }

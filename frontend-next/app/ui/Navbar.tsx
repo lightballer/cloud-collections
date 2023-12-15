@@ -7,18 +7,18 @@ const Navbar = () => {
   const handleLogoutClick = async () => await signOut();
 
   return (
-    <div className="btn-center">
+    <div className="flex justify-around h-20 pt-3 bg-slate-400">
       <Link href="/files" className="link">
-        <button className="btn btn-dark btn-lg">My files</button>
+        <button className="nav-bar-item">My files</button>
       </Link>
 
       <Link href="/files/upload" className="link">
-        <button className="btn btn-dark btn-lg">Upload</button>
+        <button className="nav-bar-item">Upload</button>
       </Link>
 
       <div className="link">
         <button
-          className="btn btn-dark btn-lg text-danger"
+          className="nav-bar-item !text-red-500"
           onClick={handleLogoutClick}
         >
           Logout

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
 import Link from "next/link";
 import useCheckAuthentication from "@/app/lib/hooks/useCheckAuthentication";
 import LoginForm from "@/app/ui/login/LoginForm";

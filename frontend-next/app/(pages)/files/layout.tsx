@@ -1,4 +1,4 @@
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "@/app/ui/Navbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

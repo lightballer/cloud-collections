@@ -84,7 +84,6 @@ const FileCard = ({ file }: Props) => {
   const closeModal = () => setIsOpen(false);
 
   if (isOpen) {
-    console.log({ id });
     return (
       <Modal isOpen={isOpen} onRequestClose={closeModal}>
         <FilePreview id={id} name={name} />
@@ -93,72 +92,72 @@ const FileCard = ({ file }: Props) => {
   }
 
   return (
-    <div className="card mx-3 smaller-card">
-      {isImage ? (
-        <Image
-          className="card-img-top"
-          src={dataUrl}
-          height={50}
-          width={50}
-          alt="file"
-        />
-      ) : (
-        <div
-          className="card-img-top"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{ fontSize: "50px", overflow: "hidden" }}>
-            <code>{extension.toUpperCase()}</code>
-          </div>
-        </div>
-      )}
-      <div className="card-body">
-        <div
-          className="d-flex align-items-center"
-          style={{ overflow: "hidden" }}
-        >
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                className="form-control mr-2"
-              />
-              <span className="text-muted">{`.${fileExtension}`}</span>
-            </>
+    <div className="flex justify-center">
+      <div className="w-60 h-100 m-10 bg-slate-300 border-2 border-slate-400 rounded-lg shadow-2xl">
+        <div>
+          {isImage ? (
+            <Image
+              className="object-contain w-60 h-60"
+              src={dataUrl}
+              height={50}
+              width={50}
+              alt="file"
+            />
           ) : (
-            <>
-              <h6 className="card-title">{fileName}</h6>
-              <span className="text-muted">{`.${fileExtension}`}</span>
-            </>
+            <div className="w-60 h-60 flex justify-center items-center">
+              <div className="text-5xl text-pink-700 uppercase overflow-hidden">
+                <code>{extension.toUpperCase()}</code>
+              </div>
+            </div>
           )}
         </div>
-      </div>
-      <div className="card-footer">
-        <small className="text-muted">Uploaded at: {date}</small>
-        {isEditing ? (
-          <button onClick={handleSaveClick} className="btn btn-success mt-2">
-            Save
+
+        <div className="">
+          <div className="flex items-center h-8 pl-2">
+            {isEditing ? (
+              <>
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  className="p-1"
+                />
+                <span>{`.${fileExtension}`}</span>
+              </>
+            ) : (
+              <>
+                <h6 className="truncate">{fileName}</h6>
+                <span>{`.${fileExtension}`}</span>
+              </>
+            )}
+          </div>
+          <div className=" text-gray-500 pl-2 text-sm">
+            <span>Uploaded at: {date}</span>
+          </div>
+        </div>
+        <div className="flex flex-col items-center">
+          {isEditing ? (
+            <button onClick={handleSaveClick} className="options-btn m-2">
+              Save
+            </button>
+          ) : (
+            <button onClick={handleEditClick} className="options-btn m-2">
+              <i className="fas fa-pencil-alt"></i> Edit title
+            </button>
+          )}
+          <button onClick={handleDownloadClick} className="options-btn m-2">
+            Download
           </button>
-        ) : (
-          <button onClick={handleEditClick} className="btn btn-secondary mt-2">
-            <i className="fas fa-pencil-alt"></i> Edit title
+          <button onClick={handleViewClick} className="options-btn m-2">
+            View
           </button>
-        )}
-        <button onClick={handleDownloadClick} className="btn btn-primary mt-2">
-          Download
-        </button>
-        <button onClick={handleViewClick} className="btn btn-primary mt-2">
-          View
-        </button>
-        <button onClick={handleDeleteClick} className="btn btn-danger mt-2">
-          Delete
-        </button>
+          <button
+            onClick={handleDeleteClick}
+            className="options-btn !text-red-600 m-2"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

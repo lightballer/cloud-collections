@@ -1,6 +1,6 @@
 "use client";
 
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
 import React from "react";
 import Link from "next/link";
 import useCheckAuthentication from "@/app/lib/hooks/useCheckAuthentication";
