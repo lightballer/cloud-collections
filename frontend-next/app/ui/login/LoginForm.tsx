@@ -1,3 +1,5 @@
+// 'use client';
+
 import { authenticate } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
 
@@ -6,39 +8,39 @@ const LoginForm = () => {
 
   return (
     <form action={dispatch}>
-      <div className="row mb-3">
-        <label htmlFor="email" className="col-sm-2 col-form-label">
+      <div className="m-4">
+        <label htmlFor="email" className="inline-block py-2">
           Email
         </label>
-        <div className="col-sm-10">
+        <div>
           <input
             type="email"
             name="email"
-            className="form-control"
+            className="rounded-md px-2 py-1 w-60"
             id="email"
             required
           />
         </div>
       </div>
-      <div className="row mb-3">
-        <label htmlFor="password" className="col-sm-2 col-form-label">
+      <div className="m-4">
+        <label htmlFor="password" className="inline-block py-2">
           Password
         </label>
-        <div className="col-sm-10">
+        <div>
           <input
             type="password"
             name="password"
-            className="form-control"
+            className="rounded-md px-2 py-1 w-60"
             id="password"
             required
           />
         </div>
         {errorMessage && (
-          <div className="help-block text-danger">{errorMessage}</div>
+          <div className="text-danger">{errorMessage}</div>
         )}
       </div>
-      <div className="d-grid gap-2">
-        <button type="submit" className="btn btn-primary btn-sm">
+      <div className="flex justify-center">
+        <button type="submit" className="rounded-xl border-white border-2 px-4 py-2">
           Login
         </button>
       </div>

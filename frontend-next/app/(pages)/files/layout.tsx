@@ -7,8 +7,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <header>
         <Navbar />
       </header>
-      <main>
-        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+      <main className="bg-primary">
+        <div className="flex-grow md:overflow-y-auto md:p-12">
           {children}
         </div>
       </main>

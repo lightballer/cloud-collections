@@ -12,7 +12,7 @@ export default function RootLayout({
         <title>Cloud Collections</title>
       </head>
       <CustomSessionProvider>
-        <body className="overflow-x-hidden">
+        <body className="overflow-x-hidden bg-primary">
           <div style={{ minHeight: "100vh" }}>{children}</div>
         </body>
       </CustomSessionProvider>
