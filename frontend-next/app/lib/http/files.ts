@@ -3,6 +3,10 @@ import { IFile } from "@/types/IFile";
 const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 const getFiles = async (token: string): Promise<IFile[] | null> => {
+  // Simulate server delay
+  // await new Promise((res, rej) => {
+  //   setTimeout(() => res(), 5000);
+  // });
   const response = await fetch(`${baseUrl}/files`, {
     method: "GET",
     headers: {

@@ -12,18 +12,15 @@ export const authOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        // console.log({ credentials });
         const parsedCredentials = z
           .object({
             email: z.string().email(),
             password: z.string().min(6),
           })
           .safeParse(credentials);
-        // console.log({ parsedCredentials });
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const token = await login(email, password);
-          // console.log({ token });
           if (!token || !token.access_token) return null;
           return token;
         }

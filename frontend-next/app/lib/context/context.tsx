@@ -22,23 +22,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     null
   );
 
-  // const { getToken, getUser } = useAuth();
-
-  
-  // useEffect(() => {
-  //   console.log('page root')
-  //   const token = getToken();
-  //   console.log({ token });
-  //   if (!token) {
-  //     redirect("/login");
-  //   } else {
-  //     getUser(token).then((username) => {
-  //       console.log({ username });
-  //       setUsername(username);
-  //     });
-  //   }
-  // }, []);
-
   return (
     <UserContext.Provider value={{ username, setUsername }}>
       {children}

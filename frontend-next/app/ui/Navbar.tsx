@@ -7,7 +7,7 @@ const Navbar = () => {
   const handleLogoutClick = async () => await signOut();
 
   return (
-    <div className="flex justify-around h-20 pt-3 bg-slate-400">
+    <div className="flex justify-center space-x-20 h-20 pt-3 bg-slate-400">
       <Link href="/files" className="link">
         <button className="nav-bar-item">My files</button>
       </Link>

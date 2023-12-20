@@ -11,7 +11,6 @@ const login = async (email: string, password: string) => {
 
   if (response.status === 201) {
     const responseJSON = await response.json();
-    // console.log({ responseJSON });
     return responseJSON;
   }
 
