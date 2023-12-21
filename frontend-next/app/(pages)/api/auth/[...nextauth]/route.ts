@@ -21,6 +21,7 @@ export const authOptions = {
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const token = await login(email, password);
+          console.log({ token });
           if (!token || !token.access_token) return null;
           return token;
         }
@@ -37,14 +38,14 @@ export const authOptions = {
     session: (({ session, token }: any) => {
       session.user = token as any;
       return session;
-    }) as any
+    }) as any,
   },
   session: {
     strategy: "jwt" as SessionStrategy,
     maxAge: 60 * 60,
   },
   jwt: {
-    maxAge: 60 * 60
+    maxAge: 60 * 60,
   },
   pages: {
     signIn: "/login",

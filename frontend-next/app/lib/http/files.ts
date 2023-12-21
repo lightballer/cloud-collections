@@ -1,14 +1,13 @@
 import { IFile } from "@/types/IFile";
+import { unstable_noStore as noStore } from "next/cache";
 
 const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 const getFiles = async (token: string): Promise<IFile[] | null> => {
-  // Simulate server delay
-  // await new Promise((res, rej) => {
-  //   setTimeout(() => res(), 5000);
-  // });
+  // noStore();
   const response = await fetch(`${baseUrl}/files`, {
     method: "GET",
+    cache: "no-store",
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -16,6 +15,7 @@ const getFiles = async (token: string): Promise<IFile[] | null> => {
 
   if (response.status === 200) {
     const files: IFile[] = await response.json();
+    console.log(files);
     return files;
   }
 

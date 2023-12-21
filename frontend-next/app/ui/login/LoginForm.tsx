@@ -1,4 +1,5 @@
 import { authenticate } from "@/app/lib/actions";
+import clsx from "clsx";
 import { useFormState } from "react-dom";
 
 const LoginForm = () => {
@@ -31,7 +32,13 @@ const LoginForm = () => {
           className="peer block w-full rounded-md px-2 py-1 border-2 border-slate-400 p-2  caret-slate-600 outline-none ring-slate-300 invalid:border-red-500 focus:border-slate-500 focus:ring-4"
           id="password"
         />
-        {errorMessage && <div className="text-danger">{errorMessage}</div>}
+        <p
+          className={clsx("text-red-600", {
+            invisible: !errorMessage,
+          })}
+        >
+          {errorMessage}
+        </p>
       </div>
       <div className="flex justify-center">
         <button

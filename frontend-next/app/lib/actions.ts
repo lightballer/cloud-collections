@@ -1,6 +1,7 @@
 import { signIn } from "next-auth/react";
 import z from "zod";
 import { signUp } from "@/app/lib/http/auth";
+import { redirect } from "next/navigation";
 
 export const authenticate = async (
   prevState: string | undefined,
@@ -9,12 +10,15 @@ export const authenticate = async (
   const email = formData.get("email");
   const password = formData.get("password");
   try {
-    const result = await signIn("credentials", { email, password, callbackUrl: '/files' });
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl: "/files",
+    });
     console.log({ result });
     if (result?.error) {
       return "Invalid email or password";
-    } else {
-      // redirect("/");
     }
   } catch (error) {
     console.log({ error });
@@ -44,15 +48,20 @@ export const register = async (
     .safeParse({ email, password });
   if (!parsedCredentials.success) return "Invalid credentials";
 
+  let ok = false;
+
   try {
     const result = await signUp(
       parsedCredentials.data.email,
       parsedCredentials.data.password
     );
-
     console.log({ result });
+    if (!result) return "Error while signing up";
+    ok = true;
   } catch (err) {
     console.log({ err });
     return "Error while signing up";
+  } finally {
+    if (ok) redirect("/login");
   }
 };

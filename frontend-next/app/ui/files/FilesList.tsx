@@ -10,7 +10,15 @@ const FilesList = async () => {
 
   const filesList = await getFiles(token);
 
-  if (!filesList) return "Server error";
+  if (!filesList)
+    return <div className="text-center place-content-center">Server error</div>;
+
+  if (filesList.length === 0)
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-5.75rem)]">
+        <h3 className="text-3xl font-bold">{`No files :(`}</h3>
+      </div>
+    );
 
   return (
     <div className="bg-slate-300">
@@ -24,3 +32,5 @@ const FilesList = async () => {
 };
 
 export default FilesList;
+
+export const dynamic = 'force-dynamic';
