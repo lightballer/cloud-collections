@@ -9,5 +9,3 @@ export default async function Page() {
     </Suspense>
   );
 }
-
-export const dynamic = 'force-dynamic';
