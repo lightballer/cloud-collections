@@ -1,5 +1,4 @@
 import { IFile } from "@/types/IFile";
-import { unstable_noStore as noStore } from "next/cache";
 
 const baseUrl = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
@@ -57,17 +56,17 @@ const upload = (token: string, file: File) => {
             "Content-Type": file.type,
           },
         });
-
+        console.log({ response });
         if (response.ok) {
           console.log("File sent successfully");
           resolve(true);
         } else {
-          reject(false);
           console.error(
             "Failed to send file:",
             response.status,
             response.statusText
           );
+          reject(false);
         }
       } catch (error) {
         console.error("Error sending file:", error);
@@ -90,7 +89,7 @@ const deleteFile = async (token: string, id: string) => {
 };
 
 const updateFilename = async (token: string, id: string, filename: string) => {
-  fetch(`${baseUrl}/files/${id}`, {
+  return fetch(`${baseUrl}/files/${id}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,

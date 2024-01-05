@@ -16,6 +16,8 @@ module.exports = {
       },
     ],
   },
+  collectCoverage: true,
+  coverageReporters: ["json", "html"],
 };
 
 process.env = Object.assign(process.env, {
